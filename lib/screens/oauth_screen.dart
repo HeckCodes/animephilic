@@ -1,6 +1,8 @@
 import 'package:animephilic/authenication_bloc/authentication_handler_bloc_bloc.dart';
 import 'package:animephilic/helpers/authentication.dart';
+import 'package:animephilic/helpers/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -17,26 +19,64 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
-      body: Center(
-        child: Visibility(
-          visible: !showLogin,
-          replacement: const OAuthScreen(),
-          child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                showLogin = true;
-              });
-            },
-            child: const Text("login to MAL"),
+      appBar: AppBar(
+        title: const Text("Login"),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
+        ),
+      ),
+      body: Visibility(
+        visible: !showLogin,
+        replacement: const OAuthScreen(),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Text(
+                  "Animephilic",
+                  style: Theme.of(context).primaryTextTheme.headlineMedium,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  Constants.welcomeMessage,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).primaryTextTheme.bodyLarge,
+                ),
+                const Spacer(),
+                FilledButton(
+                  onPressed: () {
+                    setState(() {
+                      showLogin = true;
+                    });
+                  },
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      "Login with MyAnimeList",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  "Developed by HeckCodes",
+                  style: Theme.of(context).primaryTextTheme.bodySmall,
+                ),
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        BlocProvider.of<AuthenticationHandlerBloc>(context).add(
-            const LoggedInAuthenticationHandlerBlocEvent(
-                AuthenticationStatus.loggedIn));
-      }),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:animephilic/helpers/pkce.dart';
-import 'package:animephilic/secrets/secret.dart';
+import 'package:animephilic/secret.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +12,7 @@ class Authentication {
   final String _redirectURL = "https://com.heckcodes.animephilic/getcode";
   final PkcePair pkcePair = PkcePair.generate();
 
-  String _state = "animephilicstate";
+  final String _state = "animephilicstate";
   String _code = "";
 
   String _tokenType = "";
@@ -33,6 +33,10 @@ class Authentication {
   Authentication._internal() {
     SharedPreferences.getInstance().then((prefs) {
       _isLoggedIn = prefs.getBool("loggedIn") ?? false;
+      _tokenType = prefs.getString("token_type") ?? _tokenType;
+      _expiresIn = prefs.getInt("expires_in") ?? _expiresIn;
+      _accessToken = prefs.getString("access_token") ?? _accessToken;
+      _refreshToken = prefs.getString("refresh_token") ?? _refreshToken;
     });
   }
 

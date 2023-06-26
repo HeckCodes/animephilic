@@ -1,15 +1,16 @@
 import 'dart:convert';
 
+import 'package:animephilic/helpers/constants.dart';
 import 'package:animephilic/helpers/pkce.dart';
 import 'package:animephilic/secret.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Authentication {
-  final String _authCodeBaseURL = "https://myanimelist.net/v1/oauth2/authorize";
-  final String _authTokenBaseURL = "https://myanimelist.net/v1/oauth2/token";
+  final String _authCodeBaseURL = Constants.authCodeBaseURL;
+  final String _authTokenBaseURL = Constants.authTokenBaseURL;
   final String _clientID = Secret().cliendId;
-  final String _redirectURL = "https://com.heckcodes.animephilic/getcode";
+  final String _redirectURL = Constants.redirectURL;
   final PkcePair pkcePair = PkcePair.generate();
 
   final String _state = "animephilicstate";
@@ -20,14 +21,7 @@ class Authentication {
   String _accessToken = "";
   String _refreshToken = "";
 
-  get tokenType => _tokenType;
-  get expiresIn => _expiresIn;
-  get accessToken => _accessToken;
-  get refreshToken => _refreshToken;
-
   bool _isLoggedIn = false;
-
-  get isLoggedIn => _isLoggedIn;
 
   static Authentication? _instance;
   Authentication._internal() {
@@ -41,6 +35,12 @@ class Authentication {
   }
 
   factory Authentication() => _instance ??= Authentication._internal();
+
+  get tokenType => _tokenType;
+  get expiresIn => _expiresIn;
+  get accessToken => _accessToken;
+  get refreshToken => _refreshToken;
+  get isLoggedIn => _isLoggedIn;
 
   get getAuthCodeBaseURL => _authCodeBaseURL;
   get clientID => _clientID;

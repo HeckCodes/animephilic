@@ -51,9 +51,7 @@ class _RootState extends State<Root> {
       ),
       child: BlocBuilder<AuthenticationHandlerBloc,
           AuthenticationHandlerBlocState>(
-        buildWhen: (previous, current) {
-          return previous.status != current.status;
-        },
+        buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
           if (widget.isUserLoggedIn ??
               false || state.status == AuthenticationStatus.loggedIn) {

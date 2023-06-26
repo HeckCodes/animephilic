@@ -27,7 +27,8 @@ class AccountScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(onPressed: () async {
         http.Response response = await http.get(
-          Uri.parse('https://api.myanimelist.net/v2/users/@me'),
+          Uri.parse(
+              'https://api.myanimelist.net/v2/users/@me?fields=anime_statistics'),
           headers: {
             'Authorization': "Bearer ${Authentication().accessToken}",
           },

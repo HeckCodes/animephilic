@@ -1,4 +1,4 @@
-import 'package:animephilic/authentication/authentication.dart';
+import 'package:animephilic/authentication/authenticaton_exports.dart';
 import 'package:animephilic/screens/account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

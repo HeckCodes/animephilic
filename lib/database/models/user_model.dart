@@ -30,7 +30,7 @@
 class User {
   final int id;
   final String name;
-  final String url;
+  final String picture;
   final String? gender;
   final DateTime? birthday;
   final String? location;
@@ -38,10 +38,10 @@ class User {
   final String? timezone;
   final bool? isSupporter;
 
-  User({
+  const User({
     required this.id,
     required this.name,
-    required this.url,
+    required this.picture,
     this.gender,
     this.birthday,
     this.location,
@@ -54,13 +54,13 @@ class User {
     return {
       'id': id,
       'name': name,
-      'url': url,
+      'picture': picture,
       'gender': gender,
       'birthday': birthday?.toIso8601String(),
       'location': location,
       'joined': joined.toIso8601String(),
       'timezone': timezone,
-      'isSupporter': isSupporter,
+      'isSupporter': isSupporter == null || isSupporter == false ? 0 : 1,
     };
   }
 
@@ -68,20 +68,38 @@ class User {
     return User(
       id: map['id'],
       name: map['name'],
-      url: map['url'],
+      picture: map['picture'],
       gender: map['gender'],
       birthday:
           map['birthday'] != null ? DateTime.parse(map['birthday']) : null,
       location: map['location'],
       joined: DateTime.parse(map['joined']),
       timezone: map['timezone'],
-      isSupporter: map['isSupporter'],
+      isSupporter:
+          map['isSupporter'] == 0 || map['isSupporter'] == null ? false : true,
+    );
+  }
+
+  factory User.fromJSON(Map<String, dynamic> map) {
+    return User(
+      id: map['id'],
+      name: map['name'],
+      picture: map['picture'],
+      gender: map['gender'],
+      birthday:
+          map['birthday'] != null ? DateTime.parse(map['birthday']) : null,
+      location: map['location'],
+      joined: DateTime.parse(map['joined_at']),
+      timezone: map['time_zone'],
+      isSupporter: map['is_supporter'] == 0 || map['is_supporter'] == null
+          ? false
+          : true,
     );
   }
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, url: $url, gender: $gender, birthday: $birthday, '
+    return 'User(id: $id, name: $name, picture: $picture, gender: $gender, birthday: $birthday, '
         'location: $location, joined: $joined, timezone: $timezone, isSupporter: $isSupporter)';
   }
 }

@@ -18,84 +18,109 @@
 }
 */
 
-class Stats {
+class Stat {
+  static int length = 15;
+
+  final int id = 1;
   final int numItemsWatching;
   final int numItemsCompleted;
   final int numItemsOnHold;
   final int numItemsDropped;
   final int numItemsPlanToWatch;
   final int numItems;
+  final int numEpisodes;
+  final int numTimesRewatched;
+
   final double numDaysWatched;
   final double numDaysWatching;
   final double numDaysCompleted;
   final double numDaysOnHold;
   final double numDaysDropped;
   final double numDays;
-  final int numEpisodes;
-  final int numTimesRewatched;
   final double meanScore;
 
-  Stats({
+  Stat({
     required this.numItemsWatching,
     required this.numItemsCompleted,
     required this.numItemsOnHold,
     required this.numItemsDropped,
     required this.numItemsPlanToWatch,
     required this.numItems,
+    required this.numEpisodes,
+    required this.numTimesRewatched,
     required this.numDaysWatched,
     required this.numDaysWatching,
     required this.numDaysCompleted,
     required this.numDaysOnHold,
     required this.numDaysDropped,
     required this.numDays,
-    required this.numEpisodes,
-    required this.numTimesRewatched,
     required this.meanScore,
   });
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'numItemsWatching': numItemsWatching,
       'numItemsCompleted': numItemsCompleted,
       'numItemsOnHold': numItemsOnHold,
       'numItemsDropped': numItemsDropped,
       'numItemsPlanToWatch': numItemsPlanToWatch,
       'numItems': numItems,
-      'numDaysWatched': numDaysWatched,
-      'numDaysWatching': numDaysWatching,
-      'numDaysCompleted': numDaysCompleted,
-      'numDaysOnHold': numDaysOnHold,
-      'numDaysDropped': numDaysDropped,
-      'numDays': numDays,
       'numEpisodes': numEpisodes,
       'numTimesRewatched': numTimesRewatched,
-      'meanScore': meanScore,
+      'numDaysWatched': numDaysWatched.toString(),
+      'numDaysWatching': numDaysWatching.toString(),
+      'numDaysCompleted': numDaysCompleted.toString(),
+      'numDaysOnHold': numDaysOnHold.toString(),
+      'numDaysDropped': numDaysDropped.toString(),
+      'numDays': numDays.toString(),
+      'meanScore': meanScore.toString(),
     };
   }
 
-  factory Stats.fromMap(Map<String, dynamic> map) {
-    return Stats(
+  factory Stat.fromMap(Map<String, dynamic> map) {
+    return Stat(
       numItemsWatching: map['numItemsWatching'],
       numItemsCompleted: map['numItemsCompleted'],
       numItemsOnHold: map['numItemsOnHold'],
       numItemsDropped: map['numItemsDropped'],
       numItemsPlanToWatch: map['numItemsPlanToWatch'],
       numItems: map['numItems'],
-      numDaysWatched: map['numDaysWatched'],
-      numDaysWatching: map['numDaysWatching'],
-      numDaysCompleted: map['numDaysCompleted'],
-      numDaysOnHold: map['numDaysOnHold'],
-      numDaysDropped: map['numDaysDropped'],
-      numDays: map['numDays'],
       numEpisodes: map['numEpisodes'],
       numTimesRewatched: map['numTimesRewatched'],
-      meanScore: map['meanScore'],
+      numDaysWatched: double.parse(map['numDaysWatched']),
+      numDaysWatching: double.parse(map['numDaysWatching']),
+      numDaysCompleted: double.parse(map['numDaysCompleted']),
+      numDaysOnHold: double.parse(map['numDaysOnHold']),
+      numDaysDropped: double.parse(map['numDaysDropped']),
+      numDays: double.parse(map['numDays']),
+      meanScore: double.parse(map['meanScore']),
+    );
+  }
+
+  factory Stat.fromJSON(Map<String, dynamic> map) {
+    return Stat(
+      numItemsWatching: map['num_items_watching'],
+      numItemsCompleted: map['num_items_completed'],
+      numItemsOnHold: map['num_items_on_hold'],
+      numItemsDropped: map['num_items_dropped'],
+      numItemsPlanToWatch: map['num_items_plan_to_watch'],
+      numItems: map['num_items'],
+      numEpisodes: map['num_episodes'],
+      numTimesRewatched: map['num_times_rewatched'],
+      numDaysWatched: map['num_days_watched'],
+      numDaysWatching: map['num_days_watching'],
+      numDaysCompleted: map['num_days_completed'],
+      numDaysOnHold: map['num_days_on_hold'],
+      numDaysDropped: map['num_days_dropped'],
+      numDays: map['num_days'],
+      meanScore: map['mean_score'],
     );
   }
 
   @override
   String toString() {
-    return 'Stats(numItemsWatching: $numItemsWatching, numItemsCompleted: $numItemsCompleted, '
+    return 'Stat(numItemsWatching: $numItemsWatching, numItemsCompleted: $numItemsCompleted, '
         'numItemsOnHold: $numItemsOnHold, numItemsDropped: $numItemsDropped, '
         'numItemsPlanToWatch: $numItemsPlanToWatch, numItems: $numItems, '
         'numDaysWatched: $numDaysWatched, numDaysWatching: $numDaysWatching, '

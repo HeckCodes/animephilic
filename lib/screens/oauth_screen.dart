@@ -1,4 +1,6 @@
 import 'package:animephilic/authentication/authenticaton_exports.dart';
+import 'package:animephilic/database/database_export.dart';
+
 import 'package:animephilic/helpers/helpers_exports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,15 +37,15 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                Text(
+                const Text(
                   "Animephilic",
-                  style: Theme.of(context).primaryTextTheme.headlineMedium,
+                  style: TextStyle(fontSize: 36),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   Constants.welcomeMessage,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).primaryTextTheme.bodyLarge,
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const Spacer(),
                 FilledButton(
@@ -65,10 +67,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   "Developed by HeckCodes",
-                  style: Theme.of(context).primaryTextTheme.bodySmall,
+                  style: TextStyle(fontSize: 12),
                 ),
                 const Spacer(),
               ],
@@ -107,6 +109,8 @@ class _OAuthScreenState extends State<OAuthScreen> {
                   BlocProvider.of<AuthenticationHandlerBloc>(context).add(
                       const AuthenticationHandlerEventLoggedIn(
                           AuthenticationStatus.loggedIn));
+                  BlocProvider.of<UserAccountInformationBloc>(context)
+                      .add(UserAccountInformationEventFetchData());
                 }
               });
               return NavigationDecision.prevent;

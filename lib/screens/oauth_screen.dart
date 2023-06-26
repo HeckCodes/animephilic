@@ -1,5 +1,5 @@
-import 'package:animephilic/authenication_bloc/authentication_handler_bloc_bloc.dart';
-import 'package:animephilic/helpers/authentication.dart';
+import 'package:animephilic/authentication/authenication_bloc/authentication_handler_bloc.dart';
+import 'package:animephilic/authentication/authentication.dart';
 import 'package:animephilic/helpers/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -106,7 +106,7 @@ class _OAuthScreenState extends State<OAuthScreen> {
               Authentication().handleAccessTokenFetch().then((value) {
                 if (value) {
                   BlocProvider.of<AuthenticationHandlerBloc>(context).add(
-                      const LoggedInAuthenticationHandlerBlocEvent(
+                      const AuthenticationHandlerEventLoggedIn(
                           AuthenticationStatus.loggedIn));
                 }
               });

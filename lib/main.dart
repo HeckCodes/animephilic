@@ -1,4 +1,5 @@
-import 'package:animephilic/authenication_bloc/authentication_handler_bloc_bloc.dart';
+import 'package:animephilic/authentication/authenication_bloc/authentication_handler_bloc.dart';
+import 'package:animephilic/authentication/authentication.dart';
 import 'package:animephilic/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   bool? isUserLoggedIn = sharedPreferences.getBool("loggedIn");
-
+  Authentication();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -47,10 +48,21 @@ class _RootState extends State<Root> {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: Theme.of(context).scaffoldBackgroundColor,
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
+        systemNavigationBarColor: ElevationOverlay.applySurfaceTint(
+          Theme.of(context).colorScheme.surface,
+          Theme.of(context).colorScheme.surfaceTint,
+          3,
+        ),
+        statusBarIconBrightness:
+            MediaQuery.of(context).platformBrightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
+        systemNavigationBarIconBrightness:
+            MediaQuery.of(context).platformBrightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
       ),
-      child: BlocBuilder<AuthenticationHandlerBloc,
-          AuthenticationHandlerBlocState>(
+      child: BlocBuilder<AuthenticationHandlerBloc, AuthenticationHandlerState>(
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
           if (widget.isUserLoggedIn ??

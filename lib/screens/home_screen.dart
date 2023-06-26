@@ -1,3 +1,5 @@
+import 'package:animephilic/authentication/authentication.dart';
+import 'package:animephilic/screens/account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -14,8 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(title: const Text("Home")),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
@@ -36,13 +36,17 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(FontAwesomeIcons.file),
             label: 'Manga',
           ),
+          NavigationDestination(
+            icon: Icon(FontAwesomeIcons.user),
+            label: 'Account',
+          ),
         ],
       ),
       body: <Widget>[
         Container(
-          color: Colors.red,
+          color: Colors.transparent,
           alignment: Alignment.center,
-          child: const Text('Page 1'),
+          child: Text(Authentication().accessToken),
         ),
         Container(
           color: Colors.green,
@@ -54,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           alignment: Alignment.center,
           child: const Text('Page 3'),
         ),
+        const AccountScreen(),
       ][currentPageIndex],
     );
   }

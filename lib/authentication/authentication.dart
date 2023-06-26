@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:animephilic/authentication/pkce.dart';
-import 'package:animephilic/helpers/constants.dart';
-import 'package:animephilic/secret.dart';
+import 'package:animephilic/helpers/helpers_exports.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:animephilic/authentication/authentication.dart';
+import 'package:animephilic/authentication/authenticaton_exports.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;

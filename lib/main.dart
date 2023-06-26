@@ -1,5 +1,4 @@
-import 'package:animephilic/authentication/authenication_bloc/authentication_handler_bloc.dart';
-import 'package:animephilic/authentication/authentication.dart';
+import 'package:animephilic/authentication/authenticaton_exports.dart';
 import 'package:animephilic/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

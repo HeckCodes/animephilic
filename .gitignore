@@ -44,4 +44,4 @@ app.*.map.json
 /android/app/release
 
 # API keys and IDs
-/lib/secret.dart
+/lib/helpers/secret.dart

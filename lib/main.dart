@@ -1,7 +1,7 @@
 import 'package:animephilic/authentication/authenticaton_exports.dart';
 import 'package:animephilic/database/blocs/user_account_infomation/user_account_information_bloc.dart';
 import 'package:animephilic/database/blocs/user_anime_list/user_anime_list_bloc.dart';
-import 'package:animephilic/screens/home_screen.dart';
+import 'package:animephilic/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,7 +70,7 @@ class _RootState extends State<Root> {
         builder: (context, state) {
           if (widget.isUserLoggedIn ??
               false || state.status == AuthenticationStatus.loggedIn) {
-            return const HomeScreen();
+            return const BaseScreen();
           } else {
             return const LoginScreen();
           }

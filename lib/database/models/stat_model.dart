@@ -108,13 +108,13 @@ class Stat {
       numItems: map['num_items'],
       numEpisodes: map['num_episodes'],
       numTimesRewatched: map['num_times_rewatched'],
-      numDaysWatched: map['num_days_watched'],
-      numDaysWatching: map['num_days_watching'],
-      numDaysCompleted: map['num_days_completed'],
-      numDaysOnHold: map['num_days_on_hold'],
-      numDaysDropped: map['num_days_dropped'],
-      numDays: map['num_days'],
-      meanScore: map['mean_score'],
+      numDaysWatched: double.parse(map['num_days_watched'].toString()),
+      numDaysWatching: double.parse(map['num_days_watching'].toString()),
+      numDaysCompleted: double.parse(map['num_days_completed'].toString()),
+      numDaysOnHold: double.parse(map['num_days_on_hold'].toString()),
+      numDaysDropped: double.parse(map['num_days_dropped'].toString()),
+      numDays: double.parse(map['num_days'].toString()),
+      meanScore: double.parse(map['mean_score'].toString()),
     );
   }
 

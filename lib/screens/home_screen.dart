@@ -1,5 +1,5 @@
-import 'package:animephilic/authentication/authenticaton_exports.dart';
 import 'package:animephilic/screens/account_screen.dart';
+import 'package:animephilic/screens/user_anime_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -44,15 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: <Widget>[
         Container(
-          color: Colors.transparent,
-          alignment: Alignment.center,
-          child: Text(Authentication().accessToken),
-        ),
-        Container(
           color: Colors.green,
           alignment: Alignment.center,
-          child: const Text('Page 2'),
+          child: const Text('Page 1'),
         ),
+        const UserAnimeListScreen(),
         Container(
           color: Colors.blue,
           alignment: Alignment.center,

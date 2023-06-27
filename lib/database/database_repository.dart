@@ -59,5 +59,19 @@ class ConnectDatabase {
         meanScore TEXT
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE UserAnimeList(
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        mediumImage TEXT,
+        largeImage TEXT,
+        status TEXT,
+        score INTEGER,
+        episodesWatched INTEGER,
+        isRewatching INT,
+        updatedAt TEXT
+      )
+    ''');
   }
 }

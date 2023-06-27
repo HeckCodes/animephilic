@@ -60,10 +60,36 @@ class DatabaseOperations {
     return Stat.fromMap(results.first);
   }
 
-  Future<List<UserAnimeListItem>> getUserAnimeList() async {
+  Future<List<UserAnimeListItem>> getUserAnimeList({
+    String status = 'all',
+    String orderBy = 'none',
+    String order = 'DESC',
+  }) async {
     final db = await dbInstance.database;
-    List<Map<String, dynamic>> results = await db.query('UserAnimeList');
-    return List.generate(
-        results.length, (index) => UserAnimeListItem.fromMap(results[index]));
+
+    if (orderBy == 'none') {
+      if (status == "all") {
+        List<Map<String, dynamic>> results = await db.query('UserAnimeList');
+        return List.generate(results.length,
+            (index) => UserAnimeListItem.fromMap(results[index]));
+      } else {
+        List<Map<String, dynamic>> results =
+            await db.query('UserAnimeList', where: "status == '$status'");
+        return List.generate(results.length,
+            (index) => UserAnimeListItem.fromMap(results[index]));
+      }
+    } else {
+      if (status == "all") {
+        List<Map<String, dynamic>> results =
+            await db.query('UserAnimeList', orderBy: '$orderBy $order');
+        return List.generate(results.length,
+            (index) => UserAnimeListItem.fromMap(results[index]));
+      } else {
+        List<Map<String, dynamic>> results = await db.query('UserAnimeList',
+            where: "status == '$status'", orderBy: '$orderBy $order');
+        return List.generate(results.length,
+            (index) => UserAnimeListItem.fromMap(results[index]));
+      }
+    }
   }
 }

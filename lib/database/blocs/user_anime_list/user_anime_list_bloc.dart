@@ -50,7 +50,11 @@ class UserAnimeListBloc extends Bloc<UserAnimeListEvent, UserAnimeListState> {
   ) async {
     emit(const UserAnimeListState.fetching());
     List<UserAnimeListItem> userAnimeList =
-        await _databaseOperations.getUserAnimeList();
+        await _databaseOperations.getUserAnimeList(
+      status: event.status,
+      order: event.order,
+      orderBy: event.orderBy,
+    );
     emit(UserAnimeListState.idle(userAnimeList));
   }
 }

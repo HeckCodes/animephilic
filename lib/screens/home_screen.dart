@@ -13,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
 
+  final PageController pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
+            pageController.animateToPage(currentPageIndex,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease);
           });
         },
         selectedIndex: currentPageIndex,
@@ -42,20 +47,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: <Widget>[
-        Container(
-          color: Colors.green,
-          alignment: Alignment.center,
-          child: const Text('Page 1'),
-        ),
-        const UserAnimeListScreen(),
-        Container(
-          color: Colors.blue,
-          alignment: Alignment.center,
-          child: const Text('Page 3'),
-        ),
-        const AccountScreen(),
-      ][currentPageIndex],
+      body: PageView(
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          Container(
+            color: Colors.green,
+            alignment: Alignment.center,
+            child: const Text('Page 1'),
+          ),
+          const UserAnimeListScreen(),
+          Container(
+            color: Colors.blue,
+            alignment: Alignment.center,
+            child: const Text('Page 3'),
+          ),
+          const AccountScreen(),
+        ],
+      ),
     );
   }
 }

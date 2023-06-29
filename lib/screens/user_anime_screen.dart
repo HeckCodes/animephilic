@@ -45,7 +45,6 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen>
   }
 
   void sortDialog(BuildContext context, String animeStatus) async {
-    debugPrint(animeStatus);
     showDialog<(bool, String, String)>(
       context: context,
       barrierDismissible: false,
@@ -119,7 +118,6 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen>
     ).then((value) {
       var (bool isCancel, String orderBy, String order) = value!;
       if (isCancel || orderBy == 'none') return;
-      debugPrint(orderBy + order);
       UserAnimeListBloc.instance.add(UserAnimeListEventLoadData(
         status: animeStatus,
         orderBy: orderBy,
@@ -150,6 +148,13 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen>
               floating: true,
               forceElevated: innerBoxIsScrolled,
               actions: [
+                IconButton(
+                  onPressed: () {
+                    UserAnimeListBloc.instance
+                        .add(UserAnimeListEventFetchData());
+                  },
+                  icon: const Icon(Icons.sync_rounded),
+                ),
                 IconButton(
                   onPressed: () {
                     sortDialog(context, animeStatus);

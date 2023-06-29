@@ -73,5 +73,20 @@ class ConnectDatabase {
         updatedAt TEXT
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE UserMangaList(
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        mediumImage TEXT,
+        largeImage TEXT,
+        status TEXT,
+        score INTEGER,
+        volumesRead INTEGER,
+        chaptersRead INTEGER,
+        isRereading INT,
+        updatedAt TEXT
+      )
+    ''');
   }
 }

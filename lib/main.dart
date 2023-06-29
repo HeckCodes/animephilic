@@ -1,6 +1,5 @@
 import 'package:animephilic/authentication/authenticaton_exports.dart';
-import 'package:animephilic/database/blocs/user_account_infomation/user_account_information_bloc.dart';
-import 'package:animephilic/database/blocs/user_anime_list/user_anime_list_bloc.dart';
+import 'package:animephilic/database/database_export.dart';
 import 'package:animephilic/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +20,7 @@ void main() async {
             create: (context) => AuthenticationHandlerBloc()),
         BlocProvider(create: (context) => UserAccountInformationBloc.instance),
         BlocProvider(create: (context) => UserAnimeListBloc.instance),
+        BlocProvider(create: (context) => UserMangaListBloc.instance),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

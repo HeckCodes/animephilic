@@ -94,7 +94,8 @@ class _OAuthScreenState extends State<OAuthScreen> {
 
   void setWebViewController() {
     _webViewController!.setJavaScriptMode(JavaScriptMode.unrestricted);
-    _webViewController!.setUserAgent("Chrome/81.0.0.0 Mobile");
+    _webViewController!.setUserAgent(
+        "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.196 Mobile Safari/537.36");
     _webViewController!.setNavigationDelegate(
       NavigationDelegate(
         onNavigationRequest: (NavigationRequest request) {

@@ -32,8 +32,8 @@ class _BaseScreenState extends State<BaseScreen> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            icon: Icon(FontAwesomeIcons.calendar),
-            label: 'Seasonal',
+            icon: Icon(Icons.timeline_rounded),
+            label: 'Home',
           ),
           NavigationDestination(
             icon: Icon(Icons.tv_rounded),

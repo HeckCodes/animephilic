@@ -30,7 +30,18 @@ class _AccountScreenState extends State<AccountScreen>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(title: const Text("Account")),
+      appBar: AppBar(
+        title: const Text("Account"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              UserAccountInformationBloc.instance
+                  .add(UserAccountInformationEventFetchData());
+            },
+            icon: const Icon(Icons.sync_rounded),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: BlocBuilder<UserAccountInformationBloc,
             UserAccountInformationState>(

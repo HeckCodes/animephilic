@@ -181,11 +181,7 @@ class _UserMangaListScreenState extends State<UserMangaListScreen>
             builder: (context, state) {
               if (state.userMangaList == null ||
                   state.state == UserMangaListDataState.fetching) {
-                return const Center(
-                    child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: CircularProgressIndicator(),
-                ));
+                return const Center(child: CircularProgressIndicator());
               } else {
                 if (state.userMangaList!.isEmpty) {
                   return const Center(
@@ -197,11 +193,6 @@ class _UserMangaListScreenState extends State<UserMangaListScreen>
                   itemCount: state.userMangaList!.length,
                   itemBuilder: (context, index) {
                     UserMangaListItem item = state.userMangaList![index];
-                    if (state.userMangaList!.isEmpty) {
-                      return const Center(
-                        child: Text("Empty List"),
-                      );
-                    }
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 4, vertical: 1),

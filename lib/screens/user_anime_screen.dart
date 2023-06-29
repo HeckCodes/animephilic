@@ -181,11 +181,7 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen>
             builder: (context, state) {
               if (state.userAnimeList == null ||
                   state.state == UserAnimeListDataState.fetching) {
-                return const Center(
-                    child: Padding(
-                  padding: EdgeInsets.all(32),
-                  child: CircularProgressIndicator(),
-                ));
+                return const Center(child: CircularProgressIndicator());
               } else {
                 if (state.userAnimeList!.isEmpty) {
                   return const Center(
@@ -197,11 +193,6 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen>
                   itemCount: state.userAnimeList!.length,
                   itemBuilder: (context, index) {
                     UserAnimeListItem item = state.userAnimeList![index];
-                    if (state.userAnimeList!.isEmpty) {
-                      return const Center(
-                        child: Text("Empty List"),
-                      );
-                    }
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 4, vertical: 1),

@@ -1,4 +1,5 @@
 import 'package:animephilic/authentication/authenticaton_exports.dart';
+import 'package:animephilic/database/blocs/seasonal_anime/seasonal_anime_bloc.dart';
 import 'package:animephilic/database/database_export.dart';
 import 'package:animephilic/screens/base_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,10 @@ void main() async {
         BlocProvider(create: (context) => UserAccountInformationBloc.instance),
         BlocProvider(create: (context) => UserAnimeListBloc.instance),
         BlocProvider(create: (context) => UserMangaListBloc.instance),
+        BlocProvider(create: (context) => SeasonalAnimeBloc.instance),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Animephilic',
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.system,
         theme: ThemeData.light(useMaterial3: true),

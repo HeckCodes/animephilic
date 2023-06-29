@@ -88,5 +88,22 @@ class ConnectDatabase {
         updatedAt TEXT
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE SeasonalAnime(
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        mediumImage TEXT,
+        largeImage TEXT,
+        year INTEGER,
+        season TEXT,
+        mean TEXT,
+        popularity INTEGER,
+        numberListUsers INTEGER,
+        numberScoringUsers INTEGER,
+        mediaType TEXT,
+        status TEXT
+      )
+    ''');
   }
 }

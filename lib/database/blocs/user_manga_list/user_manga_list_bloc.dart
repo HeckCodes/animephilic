@@ -38,8 +38,7 @@ class UserMangaListBloc extends Bloc<UserMangaListEvent, UserMangaListState> {
       (index) => UserMangaListItem.fromJSON(userMangaJsonList[index]),
     );
 
-    Future.forEach(
-        userMangaList, (item) => _databaseOperations.updateUserManga(item));
+    _databaseOperations.updateUserMangaList(userMangaList);
 
     emit(UserMangaListState.idle(userMangaList));
   }

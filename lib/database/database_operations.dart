@@ -1,4 +1,5 @@
 import 'package:animephilic/database/database_repository.dart';
+import 'package:animephilic/database/models/seasonal_anime_model.dart';
 import 'package:animephilic/database/models/stat_model.dart';
 import 'package:animephilic/database/models/user_anime_list_model.dart';
 import 'package:animephilic/database/models/user_manga_list_model.dart';
@@ -53,6 +54,16 @@ class DatabaseOperations {
     );
   }
 
+  Future<void> updateSeasonalAnime(SeasonalAnimeItem seasonalAnimeItem) async {
+    final db = await dbInstance.database;
+
+    await db.insert(
+      'SeasonalAnime',
+      seasonalAnimeItem.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   Future<void> updateUserAnimeList(
           List<UserAnimeListItem> userAnimeList) async =>
       await Future.forEach(userAnimeList, (item) => updateUserAnime(item));
@@ -60,6 +71,11 @@ class DatabaseOperations {
   Future<void> updateUserMangaList(
           List<UserMangaListItem> userMangaList) async =>
       await Future.forEach(userMangaList, (item) => updateUserManga(item));
+
+  Future<void> updateSeasonalAnimeList(
+          List<SeasonalAnimeItem> seasonalAnimeList) async =>
+      await Future.forEach(
+          seasonalAnimeList, (item) => updateSeasonalAnime(item));
 
   Future<User> getUserData() async {
     final db = await dbInstance.database;
@@ -138,6 +154,32 @@ class DatabaseOperations {
         return List.generate(results.length,
             (index) => UserMangaListItem.fromMap(results[index]));
       }
+    }
+  }
+
+  Future<List<SeasonalAnimeItem>> getSeasonalAnimeList({
+    String orderBy = 'none',
+    String order = 'DESC',
+    required int year,
+    required String season,
+  }) async {
+    final db = await dbInstance.database;
+
+    if (orderBy == 'none') {
+      List<Map<String, dynamic>> results = await db.query(
+        'SeasonalAnime',
+        where: "year == $year AND season == '$season'",
+      );
+      return List.generate(
+          results.length, (index) => SeasonalAnimeItem.fromMap(results[index]));
+    } else {
+      List<Map<String, dynamic>> results = await db.query(
+        'SeasonalAnime',
+        where: "year == $year AND season == '$season'",
+        orderBy: '$orderBy $order',
+      );
+      return List.generate(
+          results.length, (index) => SeasonalAnimeItem.fromMap(results[index]));
     }
   }
 }

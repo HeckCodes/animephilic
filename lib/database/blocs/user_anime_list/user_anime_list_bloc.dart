@@ -38,8 +38,7 @@ class UserAnimeListBloc extends Bloc<UserAnimeListEvent, UserAnimeListState> {
       (index) => UserAnimeListItem.fromJSON(userAnimeJsonList[index]),
     );
 
-    Future.forEach(
-        userAnimeList, (item) => _databaseOperations.updateUserAnime(item));
+    _databaseOperations.updateUserAnimeList(userAnimeList);
 
     emit(UserAnimeListState.idle(userAnimeList));
   }

@@ -1,6 +1,6 @@
-import 'package:animephilic/database/database_export.dart';
+import 'package:animephilic/screens/anime_ranking_screen.dart';
+import 'package:animephilic/screens/seasonal_anime_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,178 +9,11 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-  DateTime now = DateTime.now();
-  String season = SeasonalAnimeItem.parseSeason(DateTime.now().month);
-  List<String> seasons = ['winter', 'spring', 'summer', 'fall'];
-  int seasonIterator = ['winter', 'spring', 'summer', 'fall']
-      .indexOf(SeasonalAnimeItem.parseSeason(DateTime.now().month));
-
-  void sortDialog(BuildContext context, int year, String season) async {
-    showDialog<(bool, String, String)>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        String? orderBy = 'none';
-        String? order = 'DESC';
-        return AlertDialog(
-          title: const Text('Sort by'),
-          content: StatefulBuilder(
-            builder: (context, setState) {
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile(
-                      title: const Text('None'),
-                      subtitle: const Text("Keep the default view"),
-                      value: 'none',
-                      groupValue: orderBy,
-                      onChanged: (value) => setState(() => orderBy = value),
-                    ),
-                    RadioListTile(
-                      title: const Text("Title"),
-                      subtitle: const Text("Sort based on alphabetical order"),
-                      value: 'title',
-                      groupValue: orderBy,
-                      onChanged: (value) => setState(() => orderBy = value),
-                    ),
-                    RadioListTile(
-                      title: const Text("Mean score"),
-                      subtitle: const Text("Sort based on average rating"),
-                      value: 'mean',
-                      groupValue: orderBy,
-                      onChanged: (value) => setState(() => orderBy = value),
-                    ),
-                    RadioListTile(
-                      title: const Text("Popularity"),
-                      subtitle: const Text("Select ascending for most popular"),
-                      value: 'popularity',
-                      groupValue: orderBy,
-                      onChanged: (value) => setState(() => orderBy = value),
-                    ),
-                    const Divider(thickness: 2),
-                    RadioListTile(
-                      title: const Text("Ascending Order"),
-                      value: 'ASC',
-                      groupValue: order,
-                      onChanged: (value) => setState(() => order = value),
-                    ),
-                    RadioListTile(
-                      title: const Text("Descending Order"),
-                      value: 'DESC',
-                      groupValue: order,
-                      onChanged: (value) => setState(() => order = value),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, (true, orderBy, order)),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, (false, orderBy, order)),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    ).then((value) {
-      var (bool isCancel, String orderBy, String order) = value!;
-      if (isCancel || orderBy == 'none') return;
-      SeasonalAnimeBloc.instance.add(SeasonalAnimeEventLoadData(
-        year: year,
-        season: season,
-        orderBy: orderBy,
-        order: order,
-      ));
-    });
-  }
-
-  void seasonChangeHandle(BuildContext context, int value) {
-    if (value == 0) {
-      showDialog<(bool, DateTime)>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          DateTime selected = now;
-          return AlertDialog(
-            title: const Text("Select Year"),
-            content: StatefulBuilder(
-              builder: (context, setState) {
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width * 3 / 4,
-                  child: YearPicker(
-                    firstDate: DateTime(1917),
-                    lastDate: DateTime(DateTime.now().year + 1),
-                    initialDate: DateTime.now(),
-                    currentDate: DateTime.now(),
-                    selectedDate: selected,
-                    onChanged: (newDate) {
-                      setState(() {
-                        selected = newDate;
-                      });
-                    },
-                  ),
-                );
-              },
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, (true, selected)),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, (false, selected)),
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      ).then((value) {
-        var (isCancel, date) = value!;
-        if (!isCancel) {
-          setState(() {
-            now = date;
-          });
-          SeasonalAnimeBloc.instance
-              .add(SeasonalAnimeEventLoadData(year: now.year, season: season));
-        }
-      });
-    } else {
-      setState(() {
-        seasonIterator++;
-        seasonIterator %= 4;
-        season = seasons[seasonIterator];
-      });
-      SeasonalAnimeBloc.instance
-          .add(SeasonalAnimeEventLoadData(year: now.year, season: season));
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (SeasonalAnimeBloc.instance.state.seasonalAnimeList == null) {
-      SeasonalAnimeBloc.instance.add(SeasonalAnimeEventLoadData(
-        year: DateTime.now().year,
-        season: SeasonalAnimeItem.parseSeason(DateTime.now().month),
-      ));
-    }
-  }
-
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return DefaultTabController(
-      length: 2,
+      length: 4,
       child: Scaffold(
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -191,109 +24,43 @@ class _HomeScreenState extends State<HomeScreen>
               forceElevated: innerBoxIsScrolled,
               actions: [
                 IconButton(
-                  onPressed: () {
-                    SeasonalAnimeBloc.instance.add(SeasonalAnimeEventFetchData(
-                      year: now.year,
-                      season: season,
-                    ));
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.sync_rounded),
-                ),
-                IconButton(
-                  onPressed: () {
-                    sortDialog(context, now.year, season);
-                  },
-                  icon: const Icon(Icons.sort_rounded),
                 ),
               ],
               bottom: TabBar(
+                isScrollable: true,
                 indicatorColor: Colors.transparent,
                 labelColor: Theme.of(context).colorScheme.onBackground,
                 unselectedLabelColor:
                     Theme.of(context).colorScheme.onBackground,
-                tabs: [
-                  Tab(text: now.year.toString()),
-                  Tab(text: season),
+                tabs: const [
+                  Tab(text: "Seasonal Anime"),
+                  Tab(text: "Search"),
+                  Tab(text: "Anime Ranking"),
+                  Tab(text: "Manga Ranking"),
                 ],
                 onTap: (value) {
-                  seasonChangeHandle(context, value);
+                  if (value == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SeasonalAnimeScreen(),
+                      ),
+                    );
+                  } else if (value == 2) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AnimeRankingScreen(),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
           ],
-          body: BlocBuilder<SeasonalAnimeBloc, SeasonalAnimeState>(
-            buildWhen: (previous, current) => previous.state != current.state,
-            builder: (context, state) {
-              if (state.seasonalAnimeList == null ||
-                  state.state == SeasonalAnimeDataState.fetching) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                if (state.seasonalAnimeList!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                        "1. Please select year and season\n2. Press the 'Sync' button to load data"),
-                  );
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.seasonalAnimeList!.length,
-                  itemBuilder: (context, index) {
-                    SeasonalAnimeItem item = state.seasonalAnimeList![index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 1),
-                      child: SizedBox(
-                        height: 160,
-                        child: Card(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    item.mediumImage!,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item.title,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(fontSize: 20),
-                                      ),
-                                      Text(
-                                        SeasonalAnimeItem.parseStatus(
-                                            item.status),
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                      const Divider(thickness: 2),
-                                      Text("Mean score: ${item.mean ?? 'N/A'}"),
-                                      Text("Popularity: ${item.popularity}"),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }
-            },
-          ),
+          body: const Column(),
         ),
       ),
     );

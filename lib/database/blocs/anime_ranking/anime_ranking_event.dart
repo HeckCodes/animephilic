@@ -4,7 +4,7 @@ class AnimeRankingEvent extends Equatable {
   const AnimeRankingEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AnimeRankingEventFetchData extends AnimeRankingEvent {
@@ -17,12 +17,16 @@ class AnimeRankingEventFetchData extends AnimeRankingEvent {
 }
 
 class AnimeRankingEventFetchNextData extends AnimeRankingEvent {
-  final String nextUrl;
-  final List<AnimeRankingItem> animeRankingList;
+  final String? nextUrl;
+  final List<AnimeRankingItem>? animeRankingList;
+  final String rankingType;
 
-  const AnimeRankingEventFetchNextData(
-      {required this.nextUrl, required this.animeRankingList});
+  const AnimeRankingEventFetchNextData({
+    required this.nextUrl,
+    required this.animeRankingList,
+    required this.rankingType,
+  });
 
   @override
-  List<Object> get props => [nextUrl, animeRankingList];
+  List<Object?> get props => [nextUrl, animeRankingList, rankingType];
 }

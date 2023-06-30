@@ -28,7 +28,7 @@ class AnimeRankingBloc extends Bloc<AnimeRankingEvent, AnimeRankingState> {
 
     http.Response response = await http.get(
       Uri.parse(
-          'https://api.myanimelist.net/v2/anime/ranking?ranking_type=${event.rankingType}&limit=100&fields=${AnimeFieldOptions().animeSeasonalFields}'),
+          'https://api.myanimelist.net/v2/anime/ranking?ranking_type=${event.rankingType}&limit=20&fields=${AnimeFieldOptions().animeSeasonalFields}'),
       headers: {'Authorization': "Bearer ${Authentication().accessToken}"},
     );
     Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -47,10 +47,9 @@ class AnimeRankingBloc extends Bloc<AnimeRankingEvent, AnimeRankingState> {
     AnimeRankingEventFetchNextData event,
     Emitter<AnimeRankingState> emit,
   ) async {
-    emit(const AnimeRankingState.fetching());
-
     http.Response response = await http.get(
-      Uri.parse(event.nextUrl),
+      Uri.parse(event.nextUrl ??
+          'https://api.myanimelist.net/v2/anime/ranking?ranking_type=${event.rankingType}&limit=20&fields=${AnimeFieldOptions().animeSeasonalFields}'),
       headers: {'Authorization': "Bearer ${Authentication().accessToken}"},
     );
 
@@ -64,7 +63,7 @@ class AnimeRankingBloc extends Bloc<AnimeRankingEvent, AnimeRankingState> {
     );
 
     emit(AnimeRankingState.idle(
-      event.animeRankingList + animeRankingList,
+      (event.animeRankingList ?? []) + animeRankingList,
       nextUrl,
     ));
   }

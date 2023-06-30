@@ -185,6 +185,10 @@ class _HomeScreenState extends State<HomeScreen>
                       }
                     },
                   ),
+                  const ListTile(
+                    leading: Icon(Icons.rss_feed_rounded),
+                    title: Text("Recommendations"),
+                  ),
                 ],
               ),
             ],

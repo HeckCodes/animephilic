@@ -67,9 +67,22 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen>
       if (scrollController.position.atEdge) {
         bool isTop = scrollController.position.pixels == 0;
         if (!isTop) {
-          AnimeRankingBloc.instance
-              .add(AnimeRankingEventFetchData(rankingType: rankingType));
-          scrollController.jumpTo(scrollController.offset);
+          AnimeRankingBloc.instance.add(AnimeRankingEventFetchNextData(
+            nextUrl: AnimeRankingBloc.instance.state.nextUrl,
+            animeRankingList: AnimeRankingBloc.instance.state.animeRankingList,
+            rankingType: rankingType,
+          ));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'More data loaded.',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+              backgroundColor: Theme.of(context).cardColor,
+            ),
+          );
         }
       }
     });
@@ -135,7 +148,9 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen>
               ],
               body: BlocBuilder<AnimeRankingBloc, AnimeRankingState>(
                 buildWhen: (previous, current) =>
-                    previous.state != current.state,
+                    previous.state != current.state ||
+                    previous.animeRankingList?.length !=
+                        current.animeRankingList?.length,
                 builder: (context, state) {
                   if (state.animeRankingList == null ||
                       state.state == AnimeRankingDataState.fetching) {

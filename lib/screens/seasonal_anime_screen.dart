@@ -274,7 +274,7 @@ class _SeasonalAnimeScreenState extends State<SeasonalAnimeScreen>
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: Image.network(
-                                        item.mediumImage!,
+                                        item.largeImage!,
                                         width: 100,
                                         fit: BoxFit.cover,
                                       ),

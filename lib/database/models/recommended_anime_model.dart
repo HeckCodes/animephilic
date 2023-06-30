@@ -1,42 +1,17 @@
-class UserAnimeListItem {
+class RecommendedAnimeItem {
   final int id;
   final String title;
   final String? mediumImage;
   final String? largeImage;
-  final String? status;
-  final int score;
-  final int episodesWatched;
-  final bool isRewatching;
-  final DateTime updatedAt;
+  final double? mean;
 
-  UserAnimeListItem({
+  RecommendedAnimeItem({
     required this.id,
     required this.title,
     this.mediumImage,
     this.largeImage,
-    this.status,
-    required this.score,
-    required this.episodesWatched,
-    required this.isRewatching,
-    required this.updatedAt,
+    this.mean,
   });
-
-  static String parseStatus(String status) {
-    switch (status) {
-      case 'watching':
-        return "Watching";
-      case 'completed':
-        return "Completed";
-      case 'on_hold':
-        return "On Hold";
-      case 'dropped':
-        return "Dropped";
-      case 'plan_to_watch':
-        return "Plan to Watch";
-      default:
-        return "Undefined State";
-    }
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -44,39 +19,29 @@ class UserAnimeListItem {
       'title': title,
       'mediumImage': mediumImage,
       'largeImage': largeImage,
-      'status': status,
-      'score': score,
-      'episodesWatched': episodesWatched,
-      'isRewatching': isRewatching ? 1 : 0,
-      'updatedAt': updatedAt.toString(),
+      'mean': mean?.toString(),
     };
   }
 
-  factory UserAnimeListItem.fromMap(Map<String, dynamic> map) {
-    return UserAnimeListItem(
+  factory RecommendedAnimeItem.fromMap(Map<String, dynamic> map) {
+    return RecommendedAnimeItem(
       id: map['id'],
       title: map['title'],
       mediumImage: map['mediumImage'],
       largeImage: map['largeImage'],
-      status: map['status'],
-      score: map['score'],
-      episodesWatched: map['episodesWatched'],
-      isRewatching: map['isRewatching'] == 1 ? true : false,
-      updatedAt: DateTime.parse(map['updatedAt']),
+      mean: map['mean'] == null ? null : double.parse(map['mean']),
     );
   }
 
-  factory UserAnimeListItem.fromJSON(Map<String, dynamic> map) {
-    return UserAnimeListItem(
+  factory RecommendedAnimeItem.fromJSON(Map<String, dynamic> map) {
+    return RecommendedAnimeItem(
       id: map['node']['id'],
       title: map['node']['title'],
       mediumImage: map['node']['main_picture']['medium'],
       largeImage: map['node']['main_picture']['large'],
-      status: map['list_status']['status'],
-      score: map['list_status']['score'],
-      episodesWatched: map['list_status']['num_episodes_watched'],
-      isRewatching: map['list_status']['is_rewatching'] == 1 ? true : false,
-      updatedAt: DateTime.parse(map['list_status']['updated_at']),
+      mean: map['node']['mean'] == null
+          ? null
+          : double.parse(map['node']['mean'].toString()),
     );
   }
 }

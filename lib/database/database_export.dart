@@ -10,3 +10,4 @@ export 'models/user_manga_list_model.dart';
 export 'models/seasonal_anime_model.dart';
 export 'models/anime_ranking_model.dart';
 export 'models/field_options.dart';
+export 'models/recommended_anime_model.dart';

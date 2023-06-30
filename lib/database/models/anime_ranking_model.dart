@@ -43,6 +43,16 @@ class AnimeRankingItem {
 
   static String parseStatus(String status) {
     switch (status) {
+      case 'watching':
+        return "Watching";
+      case 'completed':
+        return "Completed";
+      case 'on_hold':
+        return "On Hold";
+      case 'dropped':
+        return "Dropped";
+      case 'plan_to_watch':
+        return "Plan to Watch";
       case 'finished_airing':
         return "Finished Airing";
       case 'currently_airing':
@@ -50,7 +60,7 @@ class AnimeRankingItem {
       case 'not_yet_aired':
         return "Not Yet Aired";
       default:
-        return "undefined";
+        return "Undefined State";
     }
   }
 
@@ -91,9 +101,7 @@ class AnimeRankingItem {
       title: map['node']['title'],
       mediumImage: map['node']['main_picture']['medium'],
       largeImage: map['node']['main_picture']['large'],
-      mean: map['node']['mean'] == null
-          ? null
-          : double.parse(map['node']['mean'].toString()),
+      mean: map['node']['mean'] == null ? null : double.parse(map['node']['mean'].toString()),
       popularity: map['node']['popularity'],
       numberListUsers: map['node']['num_list_users'],
       numberScoringUsers: map['node']['num_scoring_users'],

@@ -25,8 +25,7 @@ class _BaseScreenState extends State<BaseScreen> {
           setState(() {
             currentPageIndex = index;
             pageController.animateToPage(currentPageIndex,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.ease);
+                duration: const Duration(milliseconds: 500), curve: Curves.ease);
           });
         },
         selectedIndex: currentPageIndex,

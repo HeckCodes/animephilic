@@ -16,8 +16,7 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<AuthenticationHandlerBloc>(
-            create: (context) => AuthenticationHandlerBloc()),
+        BlocProvider<AuthenticationHandlerBloc>(create: (context) => AuthenticationHandlerBloc()),
         BlocProvider(create: (context) => UserAccountInformationBloc.instance),
         BlocProvider(create: (context) => UserAnimeListBloc.instance),
         BlocProvider(create: (context) => UserMangaListBloc.instance),
@@ -59,19 +58,14 @@ class _RootState extends State<Root> {
           3,
         ),
         statusBarIconBrightness:
-            MediaQuery.of(context).platformBrightness == Brightness.light
-                ? Brightness.dark
-                : Brightness.light,
+            MediaQuery.of(context).platformBrightness == Brightness.light ? Brightness.dark : Brightness.light,
         systemNavigationBarIconBrightness:
-            MediaQuery.of(context).platformBrightness == Brightness.light
-                ? Brightness.dark
-                : Brightness.light,
+            MediaQuery.of(context).platformBrightness == Brightness.light ? Brightness.dark : Brightness.light,
       ),
       child: BlocBuilder<AuthenticationHandlerBloc, AuthenticationHandlerState>(
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
-          if (widget.isUserLoggedIn ??
-              false || state.status == AuthenticationStatus.loggedIn) {
+          if (widget.isUserLoggedIn ?? false || state.status == AuthenticationStatus.loggedIn) {
             return const BaseScreen();
           } else {
             return const LoginScreen();

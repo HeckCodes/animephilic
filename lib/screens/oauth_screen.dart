@@ -107,11 +107,9 @@ class _OAuthScreenState extends State<OAuthScreen> {
             )) {
               Authentication().handleAccessTokenFetch().then((value) {
                 if (value) {
-                  BlocProvider.of<AuthenticationHandlerBloc>(context).add(
-                      const AuthenticationHandlerEventLoggedIn(
-                          AuthenticationStatus.loggedIn));
-                  BlocProvider.of<UserAccountInformationBloc>(context)
-                      .add(UserAccountInformationEventFetchData());
+                  BlocProvider.of<AuthenticationHandlerBloc>(context)
+                      .add(const AuthenticationHandlerEventLoggedIn(AuthenticationStatus.loggedIn));
+                  BlocProvider.of<UserAccountInformationBloc>(context).add(UserAccountInformationEventFetchData());
                 }
               });
               return NavigationDecision.prevent;
@@ -129,8 +127,7 @@ class _OAuthScreenState extends State<OAuthScreen> {
   @override
   void initState() {
     super.initState();
-    PlatformWebViewControllerCreationParams params =
-        const PlatformWebViewControllerCreationParams();
+    PlatformWebViewControllerCreationParams params = const PlatformWebViewControllerCreationParams();
     _webViewController = WebViewController.fromPlatformCreationParams(params);
     setWebViewController();
   }

@@ -104,8 +104,7 @@ class SeasonalAnimeItem {
     );
   }
 
-  factory SeasonalAnimeItem.fromJSON(
-      Map<String, dynamic> map, int year, String season) {
+  factory SeasonalAnimeItem.fromJSON(Map<String, dynamic> map, int year, String season) {
     return SeasonalAnimeItem(
       id: map['node']['id'],
       title: map['node']['title'],
@@ -113,9 +112,7 @@ class SeasonalAnimeItem {
       largeImage: map['node']['main_picture']['large'],
       year: year,
       season: season,
-      mean: map['node']['mean'] == null
-          ? null
-          : double.parse(map['node']['mean'].toString()),
+      mean: map['node']['mean'] == null ? null : double.parse(map['node']['mean'].toString()),
       popularity: map['node']['popularity'],
       numberListUsers: map['node']['num_list_users'],
       numberScoringUsers: map['node']['num_scoring_users'],

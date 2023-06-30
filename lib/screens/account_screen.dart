@@ -1,4 +1,4 @@
-import 'package:animephilic/components/stat_card.dart';
+import 'package:animephilic/components/components_export.dart';
 import 'package:animephilic/database/database_export.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +12,7 @@ class AccountScreen extends StatefulWidget {
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _AccountScreenState extends State<AccountScreen>
-    with AutomaticKeepAliveClientMixin {
+class _AccountScreenState extends State<AccountScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -21,8 +20,7 @@ class _AccountScreenState extends State<AccountScreen>
   void initState() {
     super.initState();
     if (UserAccountInformationBloc.instance.state.user == null) {
-      UserAccountInformationBloc.instance
-          .add(UserAccountInformationEventLoadData());
+      UserAccountInformationBloc.instance.add(UserAccountInformationEventLoadData());
     }
   }
 
@@ -35,16 +33,14 @@ class _AccountScreenState extends State<AccountScreen>
         actions: [
           IconButton(
             onPressed: () {
-              UserAccountInformationBloc.instance
-                  .add(UserAccountInformationEventFetchData());
+              UserAccountInformationBloc.instance.add(UserAccountInformationEventFetchData());
             },
             icon: const Icon(Icons.sync_rounded),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        child: BlocBuilder<UserAccountInformationBloc,
-            UserAccountInformationState>(
+        child: BlocBuilder<UserAccountInformationBloc, UserAccountInformationState>(
           buildWhen: (previous, current) => previous.state != current.state,
           builder: (context, state) {
             if (state.state == UserDataState.fetching || state.user == null) {
@@ -92,9 +88,18 @@ class _AccountScreenState extends State<AccountScreen>
                           children: [
                             Center(
                               child: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(state.user!.picture),
                                 radius: 80,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(80),
+                                  child: Image.network(
+                                    state.user!.picture,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        Image.asset('assets/images/avatar.png'),
+                                    width: 160,
+                                    height: 160,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                             Center(
@@ -132,16 +137,13 @@ class _AccountScreenState extends State<AccountScreen>
                             sections: [
                               PieChartSectionData(
                                 color: Theme.of(context).colorScheme.secondary,
-                                value:
-                                    state.stat!.numItemsPlanToWatch.toDouble(),
+                                value: state.stat!.numItemsPlanToWatch.toDouble(),
                                 title: '',
                                 radius: 80,
                                 titlePositionPercentageOffset: 0.55,
                               ),
                               PieChartSectionData(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
+                                color: Theme.of(context).colorScheme.inversePrimary,
                                 value: state.stat!.numItemsCompleted.toDouble(),
                                 title: '',
                                 radius: 80,
@@ -155,9 +157,7 @@ class _AccountScreenState extends State<AccountScreen>
                                 titlePositionPercentageOffset: 0.55,
                               ),
                               PieChartSectionData(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .tertiaryContainer,
+                                color: Theme.of(context).colorScheme.tertiaryContainer,
                                 value: state.stat!.numItemsOnHold.toDouble(),
                                 title: '',
                                 radius: 80,
@@ -178,8 +178,7 @@ class _AccountScreenState extends State<AccountScreen>
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Chip(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             label: Text(
                               "Watching: ${state.stat!.numItemsWatching}",
                               style: TextStyle(
@@ -188,20 +187,16 @@ class _AccountScreenState extends State<AccountScreen>
                             ),
                           ),
                           Chip(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.tertiaryContainer,
+                            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
                             label: Text(
                               "On Hold: ${state.stat!.numItemsOnHold}",
                               style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onTertiaryContainer,
+                                color: Theme.of(context).colorScheme.onTertiaryContainer,
                               ),
                             ),
                           ),
                           Chip(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.error,
+                            backgroundColor: Theme.of(context).colorScheme.error,
                             label: Text(
                               "Dropped: ${state.stat!.numItemsDropped}",
                               style: TextStyle(
@@ -210,25 +205,20 @@ class _AccountScreenState extends State<AccountScreen>
                             ),
                           ),
                           Chip(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.inversePrimary,
+                            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                             label: Text(
                               "Completed: ${state.stat!.numItemsCompleted}",
                               style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
                               ),
                             ),
                           ),
                           Chip(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
                             label: Text(
                               "Plan to Watch: ${state.stat!.numItemsPlanToWatch}",
                               style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
+                                color: Theme.of(context).colorScheme.onSecondary,
                               ),
                             ),
                           ),

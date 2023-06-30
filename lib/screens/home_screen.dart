@@ -1,11 +1,9 @@
-import 'dart:convert';
-
-import 'package:animephilic/authentication/authenticaton_exports.dart';
+import 'package:animephilic/components/components_export.dart';
 import 'package:animephilic/database/database_export.dart';
+import 'package:animephilic/helpers/helpers_exports.dart';
 import 'package:animephilic/screens/anime_ranking_screen.dart';
 import 'package:animephilic/screens/seasonal_anime_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,47 +12,9 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AutomaticKeepAliveClientMixin {
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
-  Future<List<SeasonalAnimeItem>> getSeasonalAnime(
-      int year, String season) async {
-    http.Response response = await http.get(
-      Uri.parse(
-          'https://api.myanimelist.net/v2/anime/season/$year/$season?limit=15&fields=${AnimeFieldOptions().animeSeasonalFields}'),
-      headers: {'Authorization': "Bearer ${Authentication().accessToken}"},
-    );
-    Map<String, dynamic> jsonData = jsonDecode(response.body);
-    List<dynamic> seasonalAnimeJsonList = jsonData['data'];
-
-    return List.generate(
-      seasonalAnimeJsonList.length,
-      (index) => SeasonalAnimeItem.fromJSON(
-        seasonalAnimeJsonList[index],
-        year,
-        season,
-      ),
-    );
-  }
-
-  Future<List<RecommendedAnimeItem>> getRecommendedAnime() async {
-    http.Response response = await http.get(
-      Uri.parse(
-          'https://api.myanimelist.net/v2/anime/suggestions?limit=50&fields=mean'),
-      headers: {'Authorization': "Bearer ${Authentication().accessToken}"},
-    );
-    Map<String, dynamic> jsonData = jsonDecode(response.body);
-    List<dynamic> recommendedAnimeJsonList = jsonData['data'];
-
-    return List.generate(
-      recommendedAnimeJsonList.length,
-      (index) => RecommendedAnimeItem.fromJSON(
-        recommendedAnimeJsonList[index],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +33,7 @@ class _HomeScreenState extends State<HomeScreen>
                 isScrollable: true,
                 indicatorColor: Colors.transparent,
                 labelColor: Theme.of(context).colorScheme.onBackground,
-                unselectedLabelColor:
-                    Theme.of(context).colorScheme.onBackground,
+                unselectedLabelColor: Theme.of(context).colorScheme.onBackground,
                 tabs: const [
                   Tab(text: "Seasonal Anime"),
                   Tab(text: "Search"),
@@ -130,14 +89,11 @@ class _HomeScreenState extends State<HomeScreen>
                         SeasonalAnimeItem.parseSeason(DateTime.now().month),
                       ),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
                         } else {
                           if (snapshot.hasError) {
-                            return Center(
-                                child: Text(snapshot.error.toString()));
+                            return Center(child: Text(snapshot.error.toString()));
                           } else {
                             return SizedBox(
                               height: 260,
@@ -146,61 +102,10 @@ class _HomeScreenState extends State<HomeScreen>
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: 130,
-                                    child: Card(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                snapshot
-                                                    .data![index].largeImage!,
-                                                height: 180,
-                                                fit: BoxFit.fitHeight,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8, left: 8),
-                                            child: Text(
-                                              snapshot.data![index].title,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 8),
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.star_rounded,
-                                                  size: 18,
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Text(
-                                                  "${snapshot.data![index].mean ?? 'N/A'}",
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  return HorizontalListCard(
+                                    title: snapshot.data![index].title,
+                                    imageURL: snapshot.data![index].largeImage,
+                                    stat1: "${snapshot.data![index].mean ?? 'N/A'}",
                                   );
                                 },
                               ),
@@ -216,14 +121,11 @@ class _HomeScreenState extends State<HomeScreen>
                     FutureBuilder(
                       future: getRecommendedAnime(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
                         } else {
                           if (snapshot.hasError) {
-                            return Center(
-                                child: Text(snapshot.error.toString()));
+                            return Center(child: Text(snapshot.error.toString()));
                           } else {
                             return SizedBox(
                               height: 260,
@@ -232,61 +134,10 @@ class _HomeScreenState extends State<HomeScreen>
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: 130,
-                                    child: Card(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8, left: 8, right: 8),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                snapshot
-                                                    .data![index].largeImage!,
-                                                height: 180,
-                                                fit: BoxFit.fitHeight,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8, left: 8),
-                                            child: Text(
-                                              snapshot.data![index].title,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 8),
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.star_rounded,
-                                                  size: 18,
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Text(
-                                                  "${snapshot.data![index].mean ?? 'N/A'}",
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  return HorizontalListCard(
+                                    title: snapshot.data![index].title,
+                                    imageURL: snapshot.data![index].largeImage,
+                                    stat1: "${snapshot.data![index].mean ?? 'N/A'}",
                                   );
                                 },
                               ),

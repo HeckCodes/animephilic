@@ -9,8 +9,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseOperations {
   DatabaseOperations._privateConstructor();
 
-  static final DatabaseOperations instance =
-      DatabaseOperations._privateConstructor();
+  static final DatabaseOperations instance = DatabaseOperations._privateConstructor();
 
   final ConnectDatabase dbInstance = ConnectDatabase.instance;
 
@@ -64,18 +63,14 @@ class DatabaseOperations {
     );
   }
 
-  Future<void> updateUserAnimeList(
-          List<UserAnimeListItem> userAnimeList) async =>
+  Future<void> updateUserAnimeList(List<UserAnimeListItem> userAnimeList) async =>
       await Future.forEach(userAnimeList, (item) => updateUserAnime(item));
 
-  Future<void> updateUserMangaList(
-          List<UserMangaListItem> userMangaList) async =>
+  Future<void> updateUserMangaList(List<UserMangaListItem> userMangaList) async =>
       await Future.forEach(userMangaList, (item) => updateUserManga(item));
 
-  Future<void> updateSeasonalAnimeList(
-          List<SeasonalAnimeItem> seasonalAnimeList) async =>
-      await Future.forEach(
-          seasonalAnimeList, (item) => updateSeasonalAnime(item));
+  Future<void> updateSeasonalAnimeList(List<SeasonalAnimeItem> seasonalAnimeList) async =>
+      await Future.forEach(seasonalAnimeList, (item) => updateSeasonalAnime(item));
 
   Future<User> getUserData() async {
     final db = await dbInstance.database;
@@ -101,25 +96,19 @@ class DatabaseOperations {
     if (orderBy == 'none') {
       if (status == "all") {
         List<Map<String, dynamic>> results = await db.query('UserAnimeList');
-        return List.generate(results.length,
-            (index) => UserAnimeListItem.fromMap(results[index]));
+        return List.generate(results.length, (index) => UserAnimeListItem.fromMap(results[index]));
       } else {
-        List<Map<String, dynamic>> results =
-            await db.query('UserAnimeList', where: "status == '$status'");
-        return List.generate(results.length,
-            (index) => UserAnimeListItem.fromMap(results[index]));
+        List<Map<String, dynamic>> results = await db.query('UserAnimeList', where: "status == '$status'");
+        return List.generate(results.length, (index) => UserAnimeListItem.fromMap(results[index]));
       }
     } else {
       if (status == "all") {
-        List<Map<String, dynamic>> results =
-            await db.query('UserAnimeList', orderBy: '$orderBy $order');
-        return List.generate(results.length,
-            (index) => UserAnimeListItem.fromMap(results[index]));
+        List<Map<String, dynamic>> results = await db.query('UserAnimeList', orderBy: '$orderBy $order');
+        return List.generate(results.length, (index) => UserAnimeListItem.fromMap(results[index]));
       } else {
-        List<Map<String, dynamic>> results = await db.query('UserAnimeList',
-            where: "status == '$status'", orderBy: '$orderBy $order');
-        return List.generate(results.length,
-            (index) => UserAnimeListItem.fromMap(results[index]));
+        List<Map<String, dynamic>> results =
+            await db.query('UserAnimeList', where: "status == '$status'", orderBy: '$orderBy $order');
+        return List.generate(results.length, (index) => UserAnimeListItem.fromMap(results[index]));
       }
     }
   }
@@ -134,25 +123,19 @@ class DatabaseOperations {
     if (orderBy == 'none') {
       if (status == "all") {
         List<Map<String, dynamic>> results = await db.query('UserMangaList');
-        return List.generate(results.length,
-            (index) => UserMangaListItem.fromMap(results[index]));
+        return List.generate(results.length, (index) => UserMangaListItem.fromMap(results[index]));
       } else {
-        List<Map<String, dynamic>> results =
-            await db.query('UserMangaList', where: "status == '$status'");
-        return List.generate(results.length,
-            (index) => UserMangaListItem.fromMap(results[index]));
+        List<Map<String, dynamic>> results = await db.query('UserMangaList', where: "status == '$status'");
+        return List.generate(results.length, (index) => UserMangaListItem.fromMap(results[index]));
       }
     } else {
       if (status == "all") {
-        List<Map<String, dynamic>> results =
-            await db.query('UserMangaList', orderBy: '$orderBy $order');
-        return List.generate(results.length,
-            (index) => UserMangaListItem.fromMap(results[index]));
+        List<Map<String, dynamic>> results = await db.query('UserMangaList', orderBy: '$orderBy $order');
+        return List.generate(results.length, (index) => UserMangaListItem.fromMap(results[index]));
       } else {
-        List<Map<String, dynamic>> results = await db.query('UserMangaList',
-            where: "status == '$status'", orderBy: '$orderBy $order');
-        return List.generate(results.length,
-            (index) => UserMangaListItem.fromMap(results[index]));
+        List<Map<String, dynamic>> results =
+            await db.query('UserMangaList', where: "status == '$status'", orderBy: '$orderBy $order');
+        return List.generate(results.length, (index) => UserMangaListItem.fromMap(results[index]));
       }
     }
   }
@@ -170,16 +153,14 @@ class DatabaseOperations {
         'SeasonalAnime',
         where: "year == $year AND season == '$season'",
       );
-      return List.generate(
-          results.length, (index) => SeasonalAnimeItem.fromMap(results[index]));
+      return List.generate(results.length, (index) => SeasonalAnimeItem.fromMap(results[index]));
     } else {
       List<Map<String, dynamic>> results = await db.query(
         'SeasonalAnime',
         where: "year == $year AND season == '$season'",
         orderBy: '$orderBy $order',
       );
-      return List.generate(
-          results.length, (index) => SeasonalAnimeItem.fromMap(results[index]));
+      return List.generate(results.length, (index) => SeasonalAnimeItem.fromMap(results[index]));
     }
   }
 }

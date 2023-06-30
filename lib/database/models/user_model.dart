@@ -70,13 +70,11 @@ class User {
       name: map['name'],
       picture: map['picture'],
       gender: map['gender'],
-      birthday:
-          map['birthday'] != null ? DateTime.parse(map['birthday']) : null,
+      birthday: map['birthday'] != null ? DateTime.parse(map['birthday']) : null,
       location: map['location'],
       joined: DateTime.parse(map['joined']),
       timezone: map['timezone'],
-      isSupporter:
-          map['isSupporter'] == 0 || map['isSupporter'] == null ? false : true,
+      isSupporter: map['isSupporter'] == 0 || map['isSupporter'] == null ? false : true,
     );
   }
 
@@ -86,14 +84,11 @@ class User {
       name: map['name'],
       picture: map['picture'],
       gender: map['gender'],
-      birthday:
-          map['birthday'] != null ? DateTime.parse(map['birthday']) : null,
+      birthday: map['birthday'] != null ? DateTime.parse(map['birthday']) : null,
       location: map['location'],
       joined: DateTime.parse(map['joined_at']),
       timezone: map['time_zone'],
-      isSupporter: map['is_supporter'] == 0 || map['is_supporter'] == null
-          ? false
-          : true,
+      isSupporter: map['is_supporter'] == 0 || map['is_supporter'] == null ? false : true,
     );
   }
 

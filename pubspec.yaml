@@ -34,8 +34,8 @@ flutter:
 
   uses-material-design: true
 
-  # assets:
-  #   - assets/images/loginbg.png
+  assets:
+    - assets/images/avatar.png
 
   # fonts:
   #   - family: Schyler

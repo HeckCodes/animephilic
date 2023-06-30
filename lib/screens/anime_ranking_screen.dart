@@ -1,6 +1,7 @@
+import 'package:animephilic/components/components_export.dart';
 import 'package:animephilic/database/database_export.dart';
+import 'package:animephilic/helpers/helpers_exports.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AnimeRankingScreen extends StatefulWidget {
@@ -10,8 +11,7 @@ class AnimeRankingScreen extends StatefulWidget {
   State<AnimeRankingScreen> createState() => _AnimeRankingScreenState();
 }
 
-class _AnimeRankingScreenState extends State<AnimeRankingScreen>
-    with AutomaticKeepAliveClientMixin {
+class _AnimeRankingScreenState extends State<AnimeRankingScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -19,48 +19,26 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen>
   ScrollController scrollController = ScrollController();
 
   void onTabChange(int value) {
-    switch (value) {
-      case 0:
-        rankingType = "all";
-        break;
-      case 1:
-        rankingType = "bypopularity";
-        break;
-      case 2:
-        rankingType = "favorite";
-        break;
-      case 3:
-        rankingType = "airing";
-        break;
-      case 4:
-        rankingType = "upcoming";
-        break;
-      case 5:
-        rankingType = "tv";
-        break;
-      case 6:
-        rankingType = "ova";
-        break;
-      case 7:
-        rankingType = "movie";
-        break;
-      case 8:
-        rankingType = "special";
-        break;
-      default:
-        rankingType = "all";
-        break;
-    }
-    AnimeRankingBloc.instance
-        .add(AnimeRankingEventFetchData(rankingType: rankingType));
+    List<String> rankingTypeList = [
+      'all',
+      'bypopularity',
+      'favorite',
+      'airing',
+      'upcoming',
+      'tv',
+      'ova',
+      'movie',
+      'special'
+    ];
+    rankingType = rankingTypeList[value];
+    AnimeRankingBloc.instance.add(AnimeRankingEventFetchData(rankingType: rankingType));
   }
 
   @override
   void initState() {
     super.initState();
     if (AnimeRankingBloc.instance.state.animeRankingList == null) {
-      AnimeRankingBloc.instance
-          .add(AnimeRankingEventFetchData(rankingType: rankingType));
+      AnimeRankingBloc.instance.add(AnimeRankingEventFetchData(rankingType: rankingType));
     }
 
     scrollController.addListener(() {
@@ -93,22 +71,7 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen>
     super.build(context);
     return SafeArea(
       child: AnnotatedRegion(
-        value: SystemUiOverlayStyle(
-          statusBarColor: Theme.of(context).scaffoldBackgroundColor,
-          systemNavigationBarColor: ElevationOverlay.applySurfaceTint(
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surfaceTint,
-            3,
-          ),
-          statusBarIconBrightness:
-              MediaQuery.of(context).platformBrightness == Brightness.light
-                  ? Brightness.dark
-                  : Brightness.light,
-          systemNavigationBarIconBrightness:
-              MediaQuery.of(context).platformBrightness == Brightness.light
-                  ? Brightness.dark
-                  : Brightness.light,
-        ),
+        value: getOverlayStyle(context),
         child: DefaultTabController(
           length: 9,
           child: Scaffold(
@@ -122,9 +85,7 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen>
                   actions: [
                     IconButton(
                       onPressed: () {
-                        AnimeRankingBloc.instance.add(
-                            AnimeRankingEventFetchData(
-                                rankingType: rankingType));
+                        AnimeRankingBloc.instance.add(AnimeRankingEventFetchData(rankingType: rankingType));
                       },
                       icon: const Icon(Icons.sync_rounded),
                     ),
@@ -149,11 +110,9 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen>
               body: BlocBuilder<AnimeRankingBloc, AnimeRankingState>(
                 buildWhen: (previous, current) =>
                     previous.state != current.state ||
-                    previous.animeRankingList?.length !=
-                        current.animeRankingList?.length,
+                    previous.animeRankingList?.length != current.animeRankingList?.length,
                 builder: (context, state) {
-                  if (state.animeRankingList == null ||
-                      state.state == AnimeRankingDataState.fetching) {
+                  if (state.animeRankingList == null || state.state == AnimeRankingDataState.fetching) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
                     if (state.animeRankingList!.isEmpty) {
@@ -167,60 +126,12 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen>
                       itemCount: state.animeRankingList!.length,
                       itemBuilder: (context, index) {
                         AnimeRankingItem item = state.animeRankingList![index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 1),
-                          child: SizedBox(
-                            height: 160,
-                            child: Card(
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                        item.largeImage!,
-                                        width: 100,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item.title,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                const TextStyle(fontSize: 20),
-                                          ),
-                                          Text(
-                                            UserAnimeListItem.parseStatus(
-                                                item.status),
-                                            style:
-                                                const TextStyle(fontSize: 12),
-                                          ),
-                                          const Divider(thickness: 2),
-                                          Text(
-                                              "Mean Score: ${item.mean ?? 'N/A'}"),
-                                          Text(
-                                              "Popularity: ${item.popularity ?? 'N/A'}"),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        return VerticalListCard(
+                          title: item.title,
+                          imageURL: item.largeImage,
+                          status: AnimeRankingItem.parseStatus(item.status),
+                          stat1: "Mean score: ${item.mean ?? 'N/A'}",
+                          stat2: "Popularity: ${item.popularity ?? 'N/A'}",
                         );
                       },
                     );

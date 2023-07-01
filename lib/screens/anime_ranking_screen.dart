@@ -14,7 +14,7 @@ class AnimeRankingScreen extends StatefulWidget {
 class _AnimeRankingScreenState extends State<AnimeRankingScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
+  bool isGridView = false;
   String rankingType = "all";
   ScrollController scrollController = ScrollController();
 
@@ -85,6 +85,14 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen> with AutomaticK
                   actions: [
                     IconButton(
                       onPressed: () {
+                        setState(() {
+                          isGridView = !isGridView;
+                        });
+                      },
+                      icon: Icon(!isGridView ? Icons.grid_view_rounded : Icons.view_list_rounded),
+                    ),
+                    IconButton(
+                      onPressed: () {
                         AnimeRankingBloc.instance.add(AnimeRankingEventFetchData(rankingType: rankingType));
                       },
                       icon: const Icon(Icons.sync_rounded),
@@ -120,20 +128,46 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen> with AutomaticK
                         child: Text("Fetch data using 'sync' button"),
                       );
                     }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      controller: scrollController,
-                      itemCount: state.animeRankingList!.length,
-                      itemBuilder: (context, index) {
-                        AnimeRankingItem item = state.animeRankingList![index];
-                        return VerticalListCard(
-                          title: item.title,
-                          imageURL: item.largeImage,
-                          status: AnimeRankingItem.parseStatus(item.status),
-                          stat1: "Mean score: ${item.mean ?? 'N/A'}",
-                          stat2: "Popularity: ${item.popularity ?? 'N/A'}",
-                        );
-                      },
+                    return Visibility(
+                      visible: isGridView,
+                      replacement: ListView.builder(
+                        shrinkWrap: true,
+                        controller: scrollController,
+                        itemCount: state.animeRankingList!.length,
+                        itemBuilder: (context, index) {
+                          AnimeRankingItem item = state.animeRankingList![index];
+                          return VerticalListCard(
+                            title: item.title,
+                            imageURL: item.largeImage,
+                            status: AnimeRankingItem.parseStatus(item.status),
+                            stat1: "Mean score: ${item.mean ?? 'N/A'}",
+                            stat2: "Popularity: ${item.popularity ?? 'N/A'}",
+                          );
+                        },
+                      ),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        controller: scrollController,
+                        physics: const ScrollPhysics(),
+                        itemCount: state.animeRankingList!.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 0.42,
+                        ),
+                        itemBuilder: (context, index) {
+                          AnimeRankingItem item = state.animeRankingList![index];
+                          return HorizontalListCard(
+                            title: item.title,
+                            imageURL: item.largeImage,
+                            info: [
+                              (Icons.timelapse_rounded, AnimeRankingItem.parseStatus(item.status, short: true)),
+                              (Icons.star_rounded, "${item.mean ?? 'N/A'}"),
+                              (Icons.people_alt_rounded, "${item.numberListUsers}"),
+                              (Icons.celebration_rounded, "${item.popularity}"),
+                            ],
+                          );
+                        },
+                      ),
                     );
                   }
                 },

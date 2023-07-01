@@ -56,14 +56,14 @@ class SeasonalAnimeItem {
     }
   }
 
-  static String parseStatus(String status) {
+  static String parseStatus(String status, {bool short = false}) {
     switch (status) {
       case 'finished_airing':
-        return "Finished Airing";
+        return short ? "Finished" : "Finished Airing";
       case 'currently_airing':
-        return "Currently Airing";
+        return short ? "Airing" : "Currently Airing";
       case 'not_yet_aired':
-        return "Not Yet Aired";
+        return short ? "Not Aired" : "Not Yet Aired";
       default:
         return "undefined";
     }

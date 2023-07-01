@@ -16,6 +16,7 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen> with Automati
   bool get wantKeepAlive => true;
 
   String animeStatus = "all";
+  bool isGridView = false;
 
   void onTabChange(int value) {
     List<String> statusList = ['all', 'watching', 'plan_to_watch', 'completed', 'on_hold', 'dropped'];
@@ -45,6 +46,14 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen> with Automati
               floating: true,
               forceElevated: innerBoxIsScrolled,
               actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isGridView = !isGridView;
+                    });
+                  },
+                  icon: Icon(!isGridView ? Icons.grid_view_rounded : Icons.view_list_rounded),
+                ),
                 IconButton(
                   onPressed: () => UserAnimeListBloc.instance.add(UserAnimeListEventFetchData()),
                   icon: const Icon(Icons.sync_rounded),
@@ -81,19 +90,42 @@ class _UserAnimeListScreenState extends State<UserAnimeListScreen> with Automati
                     child: Text("Nothing to see here"),
                   );
                 }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.userAnimeList!.length,
-                  itemBuilder: (context, index) {
-                    UserAnimeListItem item = state.userAnimeList![index];
-                    return VerticalListCard(
-                      title: item.title,
-                      imageURL: item.largeImage,
-                      status: UserAnimeListItem.parseStatus(item.status ?? ""),
-                      stat1: "Episodes Watched: ${item.episodesWatched}",
-                      stat2: "Your Rating: ${item.score}",
-                    );
-                  },
+                return Visibility(
+                  visible: isGridView,
+                  replacement: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.userAnimeList!.length,
+                    itemBuilder: (context, index) {
+                      UserAnimeListItem item = state.userAnimeList![index];
+                      return VerticalListCard(
+                        title: item.title,
+                        imageURL: item.largeImage,
+                        status: UserAnimeListItem.parseStatus(item.status ?? ""),
+                        stat1: "Episodes Watched: ${item.episodesWatched}",
+                        stat2: "Your Rating: ${item.score}",
+                      );
+                    },
+                  ),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.userAnimeList!.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.44,
+                    ),
+                    itemBuilder: (context, index) {
+                      UserAnimeListItem item = state.userAnimeList![index];
+                      return HorizontalListCard(
+                        title: item.title,
+                        imageURL: item.largeImage,
+                        info: [
+                          (Icons.timelapse_rounded, UserAnimeListItem.parseStatus(item.status ?? 'N/A', short: true)),
+                          (Icons.star_rounded, "${item.score}"),
+                          (Icons.checklist_rtl_rounded, "${item.episodesWatched}"),
+                        ],
+                      );
+                    },
+                  ),
                 );
               }
             },

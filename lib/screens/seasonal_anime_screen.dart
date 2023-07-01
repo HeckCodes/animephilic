@@ -17,7 +17,7 @@ class _SeasonalAnimeScreenState extends State<SeasonalAnimeScreen> {
   List<String> seasons = ['winter', 'spring', 'summer', 'fall'];
   int seasonIterator =
       ['winter', 'spring', 'summer', 'fall'].indexOf(SeasonalAnimeItem.parseSeason(DateTime.now().month));
-
+  bool isGridView = false;
   void setNow(DateTime date) {
     setState(() {
       now = date;
@@ -57,6 +57,14 @@ class _SeasonalAnimeScreenState extends State<SeasonalAnimeScreen> {
                   floating: true,
                   forceElevated: innerBoxIsScrolled,
                   actions: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isGridView = !isGridView;
+                        });
+                      },
+                      icon: Icon(!isGridView ? Icons.grid_view_rounded : Icons.view_list_rounded),
+                    ),
                     IconButton(
                       onPressed: () {
                         SeasonalAnimeBloc.instance.add(SeasonalAnimeEventFetchData(
@@ -111,12 +119,37 @@ class _SeasonalAnimeScreenState extends State<SeasonalAnimeScreen> {
                       itemCount: state.seasonalAnimeList!.length,
                       itemBuilder: (context, index) {
                         SeasonalAnimeItem item = state.seasonalAnimeList![index];
-                        return VerticalListCard(
-                          title: item.title,
-                          imageURL: item.largeImage,
-                          status: SeasonalAnimeItem.parseStatus(item.status),
-                          stat1: "Mean score: ${item.mean ?? 'N/A'}",
-                          stat2: "Popularity: ${item.popularity ?? 'N/A'}",
+                        return Visibility(
+                          visible: isGridView,
+                          replacement: VerticalListCard(
+                            title: item.title,
+                            imageURL: item.largeImage,
+                            status: SeasonalAnimeItem.parseStatus(item.status),
+                            stat1: "Mean score: ${item.mean ?? 'N/A'}",
+                            stat2: "Popularity: ${item.popularity ?? 'N/A'}",
+                          ),
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            itemCount: state.seasonalAnimeList!.length,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio: 0.42,
+                            ),
+                            itemBuilder: (context, index) {
+                              SeasonalAnimeItem item = state.seasonalAnimeList![index];
+                              return HorizontalListCard(
+                                title: item.title,
+                                imageURL: item.largeImage,
+                                info: [
+                                  (Icons.timelapse_rounded, UserAnimeListItem.parseStatus(item.status, short: true)),
+                                  (Icons.star_rounded, "${item.mean ?? 'N/A'}"),
+                                  (Icons.people_alt_rounded, "${item.numberListUsers}"),
+                                  (Icons.celebration_rounded, "${item.popularity}"),
+                                ],
+                              );
+                            },
+                          ),
                         );
                       },
                     );

@@ -32,7 +32,7 @@ class UserMangaListItem {
     required this.updatedAt,
   });
 
-  static String parseStatus(String status) {
+  static String parseStatus(String status, {bool short = false}) {
     switch (status) {
       case 'reading':
         return "Reading";
@@ -43,9 +43,9 @@ class UserMangaListItem {
       case 'dropped':
         return "Dropped";
       case 'plan_to_read':
-        return "Plan to Read";
+        return short ? "PTR" : "Plan to Read";
       default:
-        return "Undefined State";
+        return short ? 'N/A' : "Undefined State";
     }
   }
 

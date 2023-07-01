@@ -41,7 +41,7 @@ class AnimeRankingItem {
     required this.rank,
   });
 
-  static String parseStatus(String status) {
+  static String parseStatus(String status, {bool short = false}) {
     switch (status) {
       case 'watching':
         return "Watching";
@@ -52,15 +52,15 @@ class AnimeRankingItem {
       case 'dropped':
         return "Dropped";
       case 'plan_to_watch':
-        return "Plan to Watch";
+        return short ? "PTW" : "Plan to Watch";
       case 'finished_airing':
-        return "Finished Airing";
+        return short ? "FA" : "Finished Airing";
       case 'currently_airing':
-        return "Currently Airing";
+        return short ? "CA" : "Currently Airing";
       case 'not_yet_aired':
-        return "Not Yet Aired";
+        return short ? "NYA" : "Not Yet Aired";
       default:
-        return "Undefined State";
+        return short ? 'N/A' : "Undefined State";
     }
   }
 

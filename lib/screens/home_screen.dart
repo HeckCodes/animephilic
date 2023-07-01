@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             return Center(child: Text(snapshot.error.toString()));
                           } else {
                             return SizedBox(
-                              height: 260,
+                              height: 270,
                               child: ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 shrinkWrap: true,
@@ -105,7 +105,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   return HorizontalListCard(
                                     title: snapshot.data![index].title,
                                     imageURL: snapshot.data![index].largeImage,
-                                    stat1: "${snapshot.data![index].mean ?? 'N/A'}",
+                                    info: [
+                                      (Icons.star_rounded, "${snapshot.data![index].mean ?? 'N/A'}"),
+                                      (Icons.celebration_rounded, "${snapshot.data![index].popularity ?? 'N/A'}"),
+                                    ],
                                   );
                                 },
                               ),
@@ -128,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             return Center(child: Text(snapshot.error.toString()));
                           } else {
                             return SizedBox(
-                              height: 260,
+                              height: 270,
                               child: ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 shrinkWrap: true,
@@ -137,7 +140,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   return HorizontalListCard(
                                     title: snapshot.data![index].title,
                                     imageURL: snapshot.data![index].largeImage,
-                                    stat1: "${snapshot.data![index].mean ?? 'N/A'}",
+                                    info: [
+                                      (Icons.star_rounded, "${snapshot.data![index].mean ?? 'N/A'}"),
+                                    ],
                                   );
                                 },
                               ),

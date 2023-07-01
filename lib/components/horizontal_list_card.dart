@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 class HorizontalListCard extends StatelessWidget {
   final String title;
   final String? imageURL;
-  final String stat1;
+  final List<(IconData, String)> info;
   const HorizontalListCard({
     super.key,
     required this.title,
     required this.imageURL,
-    required this.stat1,
+    required this.info,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 130,
+      width: 150,
       child: Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,12 +29,14 @@ class HorizontalListCard extends StatelessWidget {
                     ? Image.network(
                         imageURL!,
                         height: 180,
-                        fit: BoxFit.fitHeight,
+                        width: 150,
+                        fit: BoxFit.cover,
                       )
                     : Image.asset(
                         'assets/images/avatar.png',
                         height: 180,
-                        fit: BoxFit.fitHeight,
+                        width: 150,
+                        fit: BoxFit.cover,
                       ),
               ),
             ),
@@ -46,22 +48,32 @@ class HorizontalListCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.star_rounded,
-                    size: 18,
+            const Divider(thickness: 2, endIndent: 16, indent: 16),
+            Wrap(
+              direction: Axis.horizontal,
+              children: [
+                ...info.map(
+                  (data) => Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          data.$1,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          data.$2,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 5),
-                  Text(
-                    stat1,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

@@ -16,6 +16,7 @@ class _UserMangaListScreenState extends State<UserMangaListScreen> with Automati
   bool get wantKeepAlive => true;
 
   String mangaStatus = "all";
+  bool isGridView = false;
 
   void onTabChange(int value) {
     List<String> statusList = ['all', 'reading', 'plan_to_read', 'completed', 'on_hold', 'dropped'];
@@ -45,6 +46,14 @@ class _UserMangaListScreenState extends State<UserMangaListScreen> with Automati
               floating: true,
               forceElevated: innerBoxIsScrolled,
               actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isGridView = !isGridView;
+                    });
+                  },
+                  icon: Icon(!isGridView ? Icons.grid_view_rounded : Icons.view_list_rounded),
+                ),
                 IconButton(
                   onPressed: () => UserMangaListBloc.instance.add(UserMangaListEventFetchData()),
                   icon: const Icon(Icons.sync_rounded),
@@ -81,19 +90,42 @@ class _UserMangaListScreenState extends State<UserMangaListScreen> with Automati
                     child: Text("Nothing to see here"),
                   );
                 }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.userMangaList!.length,
-                  itemBuilder: (context, index) {
-                    UserMangaListItem item = state.userMangaList![index];
-                    return VerticalListCard(
-                      title: item.title,
-                      imageURL: item.largeImage,
-                      status: UserMangaListItem.parseStatus(item.status ?? ""),
-                      stat1: "Chapters Read: ${item.chaptersRead}",
-                      stat2: "Your Rating: ${item.score}",
-                    );
-                  },
+                return Visibility(
+                  visible: isGridView,
+                  replacement: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.userMangaList!.length,
+                    itemBuilder: (context, index) {
+                      UserMangaListItem item = state.userMangaList![index];
+                      return VerticalListCard(
+                        title: item.title,
+                        imageURL: item.largeImage,
+                        status: UserMangaListItem.parseStatus(item.status ?? ""),
+                        stat1: "Chapters Read: ${item.chaptersRead}",
+                        stat2: "Your Rating: ${item.score}",
+                      );
+                    },
+                  ),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.userMangaList!.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 0.44,
+                    ),
+                    itemBuilder: (context, index) {
+                      UserMangaListItem item = state.userMangaList![index];
+                      return HorizontalListCard(
+                        title: item.title,
+                        imageURL: item.largeImage,
+                        info: [
+                          (Icons.timelapse_rounded, UserMangaListItem.parseStatus(item.status ?? 'N/A', short: true)),
+                          (Icons.star_rounded, "${item.score}"),
+                          (Icons.checklist_rtl_rounded, "${item.chaptersRead}"),
+                        ],
+                      );
+                    },
+                  ),
                 );
               }
             },

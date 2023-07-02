@@ -93,8 +93,12 @@ class _AccountScreenState extends State<AccountScreen> with AutomaticKeepAliveCl
                                   borderRadius: BorderRadius.circular(80),
                                   child: Image.network(
                                     state.user!.picture,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        Image.asset('assets/images/avatar.png'),
+                                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                                      'assets/images/avatar.png',
+                                      width: 160,
+                                      height: 160,
+                                      fit: BoxFit.cover,
+                                    ),
                                     width: 160,
                                     height: 160,
                                     fit: BoxFit.cover,

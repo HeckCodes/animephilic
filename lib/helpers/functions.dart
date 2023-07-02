@@ -283,3 +283,12 @@ Future<List<RecommendedAnimeItem>> getRecommendedAnime() async {
     ),
   );
 }
+
+Future<AnimeDetails> getAnimeDetails(int id) async {
+  http.Response response = await http.get(
+    Uri.parse('https://api.myanimelist.net/v2/anime/$id?fields=${AnimeFieldOptions().animeFull}'),
+    headers: {'Authorization': "Bearer ${Authentication().accessToken}"},
+  );
+
+  return AnimeDetails.fromMap(jsonDecode(response.body));
+}

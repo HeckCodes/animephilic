@@ -15,6 +15,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  late final Future<List<SeasonalAnimeItem>> seasonalAnimeFuture;
+  late final Future<List<RecommendedAnimeItem>> recommendedAnimeFuture;
+  @override
+  void initState() {
+    super.initState();
+    seasonalAnimeFuture = getSeasonalAnime(
+      DateTime.now().year,
+      SeasonalAnimeItem.parseSeason(DateTime.now().month),
+    );
+    recommendedAnimeFuture = getRecommendedAnime();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,36 +95,33 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       splashColor: Colors.transparent,
                     ),
                     FutureBuilder(
-                      future: getSeasonalAnime(
-                        DateTime.now().year,
-                        SeasonalAnimeItem.parseSeason(DateTime.now().month),
-                      ),
+                      future: seasonalAnimeFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text(snapshot.error.toString()));
+                        } else if (snapshot.hasData) {
+                          return SizedBox(
+                            height: 270,
+                            child: ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return HorizontalListCard(
+                                  title: snapshot.data![index].title,
+                                  imageURL: snapshot.data![index].largeImage,
+                                  info: [
+                                    (Icons.star_rounded, "${snapshot.data![index].mean ?? 'N/A'}"),
+                                    (Icons.celebration_rounded, "${snapshot.data![index].popularity ?? 'N/A'}"),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
                         } else {
-                          if (snapshot.hasError) {
-                            return Center(child: Text(snapshot.error.toString()));
-                          } else {
-                            return SizedBox(
-                              height: 270,
-                              child: ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return HorizontalListCard(
-                                    title: snapshot.data![index].title,
-                                    imageURL: snapshot.data![index].largeImage,
-                                    info: [
-                                      (Icons.star_rounded, "${snapshot.data![index].mean ?? 'N/A'}"),
-                                      (Icons.celebration_rounded, "${snapshot.data![index].popularity ?? 'N/A'}"),
-                                    ],
-                                  );
-                                },
-                              ),
-                            );
-                          }
+                          return const Center(child: Text('Some went extremely wrong!'));
                         }
                       },
                     ),
@@ -122,32 +130,32 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       title: Text("Recommendations"),
                     ),
                     FutureBuilder(
-                      future: getRecommendedAnime(),
+                      future: recommendedAnimeFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text(snapshot.error.toString()));
+                        } else if (snapshot.hasData) {
+                          return SizedBox(
+                            height: 270,
+                            child: ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return HorizontalListCard(
+                                  title: snapshot.data![index].title,
+                                  imageURL: snapshot.data![index].largeImage,
+                                  info: [
+                                    (Icons.star_rounded, "${snapshot.data![index].mean ?? 'N/A'}"),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
                         } else {
-                          if (snapshot.hasError) {
-                            return Center(child: Text(snapshot.error.toString()));
-                          } else {
-                            return SizedBox(
-                              height: 270,
-                              child: ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return HorizontalListCard(
-                                    title: snapshot.data![index].title,
-                                    imageURL: snapshot.data![index].largeImage,
-                                    info: [
-                                      (Icons.star_rounded, "${snapshot.data![index].mean ?? 'N/A'}"),
-                                    ],
-                                  );
-                                },
-                              ),
-                            );
-                          }
+                          return const Center(child: Text('Some went extremely wrong!'));
                         }
                       },
                     ),

@@ -16,7 +16,7 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<AuthenticationHandlerBloc>(create: (context) => AuthenticationHandlerBloc()),
+        BlocProvider(create: (context) => AuthenticationHandlerBloc()),
         BlocProvider(create: (context) => UserAccountInformationBloc.instance),
         BlocProvider(create: (context) => UserAnimeListBloc.instance),
         BlocProvider(create: (context) => UserMangaListBloc.instance),

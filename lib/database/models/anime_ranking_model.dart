@@ -99,8 +99,8 @@ class AnimeRankingItem {
     return AnimeRankingItem(
       id: map['node']['id'],
       title: map['node']['title'],
-      mediumImage: map['node']['main_picture']['medium'],
-      largeImage: map['node']['main_picture']['large'],
+      mediumImage: map['node']['main_picture'] != null ? map['node']['main_picture']['medium'] : null,
+      largeImage: map['node']['main_picture'] != null ? map['node']['main_picture']['large'] : null,
       mean: map['node']['mean'] == null ? null : double.parse(map['node']['mean'].toString()),
       popularity: map['node']['popularity'],
       numberListUsers: map['node']['num_list_users'],

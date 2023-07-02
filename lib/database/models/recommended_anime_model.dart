@@ -37,8 +37,8 @@ class RecommendedAnimeItem {
     return RecommendedAnimeItem(
       id: map['node']['id'],
       title: map['node']['title'],
-      mediumImage: map['node']['main_picture']['medium'],
-      largeImage: map['node']['main_picture']['large'],
+      mediumImage: map['node']['main_picture'] != null ? map['node']['main_picture']['medium'] : null,
+      largeImage: map['node']['main_picture'] != null ? map['node']['main_picture']['large'] : null,
       mean: map['node']['mean'] == null ? null : double.parse(map['node']['mean'].toString()),
     );
   }

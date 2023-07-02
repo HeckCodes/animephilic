@@ -83,8 +83,8 @@ class UserMangaListItem {
     return UserMangaListItem(
       id: map['node']['id'],
       title: map['node']['title'],
-      mediumImage: map['node']['main_picture']['medium'],
-      largeImage: map['node']['main_picture']['large'],
+      mediumImage: map['node']['main_picture'] != null ? map['node']['main_picture']['medium'] : null,
+      largeImage: map['node']['main_picture'] != null ? map['node']['main_picture']['large'] : null,
       status: map['list_status']['status'],
       score: map['list_status']['score'],
       volumesRead: map['list_status']['num_volumes_read'],

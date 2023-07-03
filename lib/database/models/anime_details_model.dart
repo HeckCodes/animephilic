@@ -144,6 +144,8 @@ class AnimeDetails {
   final List<RelatedItem> relatedManga;
   final StatisticsItem? statistics;
   final List<RecommendationItem> recommendations;
+  final List<String>? openingThemes;
+  final List<String>? endingThemes;
 
   AnimeDetails({
     required this.id,
@@ -181,6 +183,8 @@ class AnimeDetails {
     required this.relatedManga,
     required this.statistics,
     required this.recommendations,
+    required this.openingThemes,
+    required this.endingThemes,
   });
 
   static String parseNsfw(String value) {
@@ -384,6 +388,10 @@ class AnimeDetails {
           (x) => RecommendationItem.fromMap(x),
         ),
       ),
+      openingThemes:
+          map['opening_themes'] != null ? List.from((map['opening_themes'] as List).map((e) => e['text'])) : null,
+      endingThemes:
+          map['ending_themes'] != null ? List.from((map['ending_themes'] as List).map((e) => e['text'])) : null,
     );
   }
 }

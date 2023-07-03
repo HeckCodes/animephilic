@@ -31,7 +31,9 @@ class AnimeFieldOptions {
     "related_anime",
     "related_manga",
     "recommendations",
-    "statistics"
+    "statistics",
+    "opening_themes",
+    "ending_themes",
   ];
 
   final List<String> animeSeasonal = [

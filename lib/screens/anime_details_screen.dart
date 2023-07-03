@@ -17,6 +17,7 @@ class AnimeDetailsScreen extends StatefulWidget {
 
 class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
   bool trimSynopsis = true;
+  bool trimBackground = true;
   late final Future<AnimeDetails> animeDetailsFuture;
 
   @override
@@ -73,6 +74,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           ),
                           Expanded(
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   details.title,
@@ -135,7 +137,23 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 8),
-                    Text(details.background ?? 'N/A'),
+                    Text(
+                      details.synopsis ?? "No background available.",
+                      maxLines: trimBackground ? 4 : null,
+                      overflow: TextOverflow.fade,
+                    ),
+                    Center(
+                      child: IconButton(
+                        icon: trimBackground
+                            ? const Icon(Icons.keyboard_arrow_down_rounded)
+                            : const Icon(Icons.keyboard_arrow_up_rounded),
+                        onPressed: () {
+                          setState(() {
+                            trimBackground = !trimBackground;
+                          });
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                       "About",
@@ -494,12 +512,66 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     const Divider(thickness: 2),
                     const SizedBox(height: 16),
                     const Text(
+                      "Openings",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 12),
+                    Visibility(
+                      visible: details.openingThemes != null || details.openingThemes!.isNotEmpty,
+                      replacement: const Text("No images available"),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...details.openingThemes!.map((e) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  e,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "Endings",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 12),
+                    Visibility(
+                      visible: details.endingThemes != null && details.endingThemes!.isNotEmpty,
+                      replacement: const Text("No images available"),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...details.endingThemes!.map((e) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  e,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Divider(thickness: 2),
+                    const SizedBox(height: 16),
+                    const Text(
                       "Pictures",
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.pictures != null,
+                      visible: details.pictures != null && details.pictures!.isNotEmpty,
                       replacement: const Text("No images available"),
                       child: SizedBox(
                         height: 200,

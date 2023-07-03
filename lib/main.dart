@@ -1,5 +1,6 @@
 import 'package:animephilic/authentication/authenticaton_exports.dart';
 import 'package:animephilic/database/database_export.dart';
+import 'package:animephilic/screens/anime_details_screen.dart';
 import 'package:animephilic/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,7 +67,7 @@ class _RootState extends State<Root> {
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
           if (widget.isUserLoggedIn ?? false || state.status == AuthenticationStatus.loggedIn) {
-            return const BaseScreen();
+            return const AnimeDetailsScreen(animeId: 1535);
           } else {
             return const LoginScreen();
           }

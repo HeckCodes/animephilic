@@ -137,6 +137,9 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen> with AutomaticK
                         itemBuilder: (context, index) {
                           AnimeRankingItem item = state.animeRankingList![index];
                           return VerticalListCard(
+                            animeId: item.id,
+                            isForAnime: true,
+                            mangaId: 000,
                             title: item.title,
                             imageURL: item.largeImage,
                             status: AnimeRankingItem.parseStatus(item.status),
@@ -157,6 +160,9 @@ class _AnimeRankingScreenState extends State<AnimeRankingScreen> with AutomaticK
                         itemBuilder: (context, index) {
                           AnimeRankingItem item = state.animeRankingList![index];
                           return HorizontalListCard(
+                            animeId: item.id,
+                            mangaId: 000,
+                            isForAnime: true,
                             title: item.title,
                             imageURL: item.largeImage,
                             info: [

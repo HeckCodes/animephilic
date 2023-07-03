@@ -98,6 +98,9 @@ class _UserMangaListScreenState extends State<UserMangaListScreen> with Automati
                     itemBuilder: (context, index) {
                       UserMangaListItem item = state.userMangaList![index];
                       return VerticalListCard(
+                        animeId: 000,
+                        mangaId: 000,
+                        isForAnime: false,
                         title: item.title,
                         imageURL: item.largeImage,
                         status: UserMangaListItem.parseStatus(item.status ?? ""),
@@ -118,6 +121,9 @@ class _UserMangaListScreenState extends State<UserMangaListScreen> with Automati
                       return HorizontalListCard(
                         title: item.title,
                         imageURL: item.largeImage,
+                        animeId: 000,
+                        mangaId: 000,
+                        isForAnime: false,
                         info: [
                           (Icons.timelapse_rounded, UserMangaListItem.parseStatus(item.status ?? 'N/A', short: true)),
                           (Icons.star_rounded, "${item.score}"),

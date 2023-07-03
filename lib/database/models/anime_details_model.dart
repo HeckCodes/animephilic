@@ -73,11 +73,11 @@ class StatisticsItem {
   factory StatisticsItem.fromMap(Map<String, dynamic> map) {
     return StatisticsItem(
       numberListUsers: map['num_list_users'] as int,
-      watching: int.parse(map['status']['watching']),
-      complete: int.parse(map['status']['completed']),
-      onHold: int.parse(map['status']['on_hold']),
-      dropped: int.parse(map['status']['dropped']),
-      planToWatch: int.parse(map['status']['plan_to_watch']),
+      watching: int.parse(map['status']['watching'].toString()),
+      complete: int.parse(map['status']['completed'].toString()),
+      onHold: int.parse(map['status']['on_hold'].toString()),
+      dropped: int.parse(map['status']['dropped'].toString()),
+      planToWatch: int.parse(map['status']['plan_to_watch'].toString()),
     );
   }
 }

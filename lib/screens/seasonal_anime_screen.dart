@@ -123,6 +123,9 @@ class _SeasonalAnimeScreenState extends State<SeasonalAnimeScreen> {
                           visible: isGridView,
                           replacement: VerticalListCard(
                             title: item.title,
+                            animeId: item.id,
+                            mangaId: 000,
+                            isForAnime: true,
                             imageURL: item.largeImage,
                             status: SeasonalAnimeItem.parseStatus(item.status),
                             stat1: "Mean score: ${item.mean ?? 'N/A'}",
@@ -141,6 +144,9 @@ class _SeasonalAnimeScreenState extends State<SeasonalAnimeScreen> {
                               return HorizontalListCard(
                                 title: item.title,
                                 imageURL: item.largeImage,
+                                animeId: item.id,
+                                mangaId: 000,
+                                isForAnime: true,
                                 info: [
                                   (Icons.timelapse_rounded, UserAnimeListItem.parseStatus(item.status, short: true)),
                                   (Icons.star_rounded, "${item.mean ?? 'N/A'}"),

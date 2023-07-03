@@ -110,6 +110,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 return HorizontalListCard(
+                                  animeId: snapshot.data![index].id,
+                                  mangaId: 000,
+                                  isForAnime: true,
                                   title: snapshot.data![index].title,
                                   imageURL: snapshot.data![index].largeImage,
                                   info: [
@@ -145,6 +148,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 return HorizontalListCard(
+                                  animeId: snapshot.data![index].id,
+                                  mangaId: 000,
+                                  isForAnime: true,
                                   title: snapshot.data![index].title,
                                   imageURL: snapshot.data![index].largeImage,
                                   info: [

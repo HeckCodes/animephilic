@@ -46,88 +46,85 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 200,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                details.largeImage ?? "",
-                                width: 150,
-                                height: 200,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/avatar.png',
-                                    width: 150,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                  );
-                                },
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              details.largeImage ?? "",
+                              width: 150,
+                              height: 200,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/images/avatar.png',
+                                  width: 150,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                details.title,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.tv_rounded),
+                                    const SizedBox(width: 8),
+                                    Text(AnimeDetails.parseMediaType(details.mediaType)),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.timelapse_rounded),
+                                    const SizedBox(width: 8),
+                                    Text("${details.numberEpisodes} Episodes"),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.podcasts_rounded),
+                                    const SizedBox(width: 8),
+                                    Text(AnimeDetails.parseStatus(details.status)),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.star_rounded),
+                                    const SizedBox(width: 8),
+                                    Text('${details.mean ?? 'N/A'}'),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  details.title,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.tv_rounded),
-                                      const SizedBox(width: 8),
-                                      Text(AnimeDetails.parseMediaType(details.mediaType)),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.timelapse_rounded),
-                                      const SizedBox(width: 8),
-                                      Text("${details.numberEpisodes} Episodes"),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.podcasts_rounded),
-                                      const SizedBox(width: 8),
-                                      Text(AnimeDetails.parseStatus(details.status)),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.star_rounded),
-                                      const SizedBox(width: 8),
-                                      Text('${details.mean ?? 'N/A'}'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     const Divider(thickness: 2),
@@ -138,7 +135,9 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      details.synopsis ?? "No background available.",
+                      details.background == null || details.background == ""
+                          ? "No background available."
+                          : details.background!,
                       maxLines: trimBackground ? 4 : null,
                       overflow: TextOverflow.fade,
                     ),
@@ -516,52 +515,48 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 12),
-                    Visibility(
-                      visible: details.openingThemes != null || details.openingThemes!.isNotEmpty,
-                      replacement: const Text("No images available"),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ...details.openingThemes!.map((e) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Text(
-                                  e,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
+                    details.openingThemes != null && (details.openingThemes ?? []).isNotEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...details.openingThemes!.map((e) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    child: Text(
+                                      e,
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ))
+                            ],
+                          )
+                        : const Text("No endings available"),
                     const SizedBox(height: 12),
                     const Text(
                       "Endings",
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 12),
-                    Visibility(
-                      visible: details.endingThemes != null && details.endingThemes!.isNotEmpty,
-                      replacement: const Text("No images available"),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ...details.endingThemes!.map((e) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Text(
-                                  e,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
+                    details.endingThemes != null && (details.endingThemes ?? []).isNotEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...details.endingThemes!.map((e) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    child: Text(
+                                      e,
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ))
+                            ],
+                          )
+                        : const Text("No endings available"),
                     const SizedBox(height: 8),
                     const Divider(thickness: 2),
                     const SizedBox(height: 16),
@@ -620,6 +615,9 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           itemCount: details.relatedAnime.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
+                              animeId: details.relatedAnime[index].id,
+                              mangaId: 000,
+                              isForAnime: true,
                               title: details.relatedAnime[index].title,
                               imageURL: details.relatedAnime[index].largeImage,
                               info: [
@@ -650,6 +648,9 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           itemCount: details.relatedManga.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
+                              animeId: 000,
+                              mangaId: details.relatedManga[index].id,
+                              isForAnime: false,
                               title: details.relatedManga[index].title,
                               imageURL: details.relatedManga[index].largeImage,
                               info: [
@@ -680,6 +681,9 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           itemCount: details.recommendations.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
+                              animeId: details.recommendations[index].id,
+                              mangaId: 000,
+                              isForAnime: true,
                               title: details.recommendations[index].title,
                               imageURL: details.recommendations[index].largeImage,
                               info: [

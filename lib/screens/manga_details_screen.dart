@@ -1,45 +1,44 @@
 import 'package:animephilic/components/components_export.dart';
 import 'package:animephilic/database/database_export.dart';
 import 'package:animephilic/helpers/helpers_exports.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class AnimeDetailsScreen extends StatefulWidget {
-  final int animeId;
-  const AnimeDetailsScreen({
+class MangaDetailsScreen extends StatefulWidget {
+  final int mangaId;
+  const MangaDetailsScreen({
     super.key,
-    required this.animeId,
+    required this.mangaId,
   });
 
   @override
-  State<AnimeDetailsScreen> createState() => _AnimeDetailsScreenState();
+  State<MangaDetailsScreen> createState() => _MangaDetailsScreenState();
 }
 
-class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
+class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
   bool trimSynopsis = true;
   bool trimBackground = true;
-  late final Future<AnimeDetails> animeDetailsFuture;
+  late final Future<MangaDetails> mangaDetailsFuture;
 
   @override
   void initState() {
     super.initState();
     // Prevents calling the future builder with every setState.
-    animeDetailsFuture = getAnimeDetails(widget.animeId);
+    mangaDetailsFuture = getMangaDetails(widget.mangaId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Anime Details')),
+      appBar: AppBar(title: const Text('Manga Details')),
       body: FutureBuilder(
-        future: animeDetailsFuture,
+        future: mangaDetailsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           } else if (snapshot.hasData) {
-            AnimeDetails details = snapshot.data!;
+            MangaDetails details = snapshot.data!;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -87,7 +86,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   children: [
                                     const Icon(Icons.tv_rounded),
                                     const SizedBox(width: 8),
-                                    Text(AnimeDetails.parseMediaType(details.mediaType)),
+                                    Text(MangaDetails.parseMediaType(details.mediaType)),
                                   ],
                                 ),
                               ),
@@ -97,7 +96,17 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   children: [
                                     const Icon(Icons.timelapse_rounded),
                                     const SizedBox(width: 8),
-                                    Text("${details.numberEpisodes} Episodes"),
+                                    Text("${details.numberChapters} Chapters"),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.timelapse_rounded),
+                                    const SizedBox(width: 8),
+                                    Text("${details.numberVolumes} Volumes"),
                                   ],
                                 ),
                               ),
@@ -107,7 +116,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   children: [
                                     const Icon(Icons.podcasts_rounded),
                                     const SizedBox(width: 8),
-                                    Text(AnimeDetails.parseStatus(details.status)),
+                                    Text(MangaDetails.parseStatus(details.status)),
                                   ],
                                 ),
                               ),
@@ -299,8 +308,8 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           SizedBox(height: 8),
                         ]),
                         TableRow(children: [
-                          const Text("Studio"),
-                          Text(details.studios.map((e) => e.$2).join(', ')),
+                          const Text("Authors"),
+                          Text(details.authors.map((e) => "${e.lastName} ${e.firstName} (${e.role})").join(', ')),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -339,224 +348,11 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           SizedBox(height: 8),
                         ]),
                         TableRow(children: [
-                          const Text("Season"),
-                          Text(details.startSeason == null
-                              ? 'N/A'
-                              : "${details.startSeason!.$2[0].toUpperCase() + details.startSeason!.$2.substring(1)} ${details.startSeason!.$1}"),
-                        ]),
-                        const TableRow(children: [
-                          SizedBox(height: 8),
-                          SizedBox(height: 8),
-                        ]),
-                        TableRow(children: [
-                          const Text("Broadcast"),
-                          Text(details.broadcast == null
-                              ? 'N/A'
-                              : "${details.broadcast!.$1[0].toUpperCase() + details.broadcast!.$1.substring(1)} - ${details.broadcast!.$2}"),
-                        ]),
-                        const TableRow(children: [
-                          SizedBox(height: 8),
-                          SizedBox(height: 8),
-                        ]),
-                        TableRow(children: [
-                          const Text("Duration"),
-                          Text("${(details.averageEpDurationInSec ?? 0) ~/ 60} min"),
-                        ]),
-                        const TableRow(children: [
-                          SizedBox(height: 8),
-                          SizedBox(height: 8),
-                        ]),
-                        TableRow(children: [
-                          const Text("Source"),
-                          Text(AnimeDetails.parseSource(details.source ?? 'N/A')),
-                        ]),
-                        const TableRow(children: [
-                          SizedBox(height: 8),
-                          SizedBox(height: 8),
-                        ]),
-                        TableRow(children: [
                           const Text("Rating"),
-                          Text(AnimeDetails.parseRating(details.rating ?? 'N/A')),
-                        ]),
-                        const TableRow(children: [
-                          SizedBox(height: 8),
-                          SizedBox(height: 8),
-                        ]),
-                        TableRow(children: [
-                          const Text("Rating"),
-                          Text(AnimeDetails.parseNsfw(details.nsfw ?? 'N/A')),
+                          Text(MangaDetails.parseNsfw(details.nsfw ?? 'N/A')),
                         ]),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    const Divider(thickness: 2),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Statistics",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 12),
-                    Visibility(
-                      visible: details.statistics != null,
-                      replacement: const Text('Statistics not available'),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            width: 170,
-                            height: 200,
-                            child: PieChart(
-                              PieChartData(
-                                sectionsSpace: 0,
-                                centerSpaceRadius: 0,
-                                sections: [
-                                  PieChartSectionData(
-                                    color: Theme.of(context).colorScheme.secondary,
-                                    value: details.statistics!.planToWatch.toDouble(),
-                                    title: '',
-                                    radius: 80,
-                                    titlePositionPercentageOffset: 0.55,
-                                  ),
-                                  PieChartSectionData(
-                                    color: Theme.of(context).colorScheme.inversePrimary,
-                                    value: details.statistics!.complete.toDouble(),
-                                    title: '',
-                                    radius: 80,
-                                    titlePositionPercentageOffset: 0.55,
-                                  ),
-                                  PieChartSectionData(
-                                    color: Theme.of(context).colorScheme.error,
-                                    value: details.statistics!.dropped.toDouble(),
-                                    title: '',
-                                    radius: 80,
-                                    titlePositionPercentageOffset: 0.55,
-                                  ),
-                                  PieChartSectionData(
-                                    color: Theme.of(context).colorScheme.tertiaryContainer,
-                                    value: details.statistics!.onHold.toDouble(),
-                                    title: '',
-                                    radius: 80,
-                                    titlePositionPercentageOffset: 0.55,
-                                  ),
-                                  PieChartSectionData(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    value: details.statistics!.watching.toDouble(),
-                                    title: '',
-                                    radius: 80,
-                                    titlePositionPercentageOffset: 0.55,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Chip(
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                labelPadding: const EdgeInsets.all(0),
-                                label: Text(
-                                  "Watching: ${details.statistics!.watching}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onPrimary,
-                                  ),
-                                ),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-                                labelPadding: const EdgeInsets.all(0),
-                                label: Text(
-                                  "On Hold: ${details.statistics!.onHold}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onTertiaryContainer,
-                                  ),
-                                ),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).colorScheme.error,
-                                labelPadding: const EdgeInsets.all(0),
-                                label: Text(
-                                  "Dropped: ${details.statistics!.dropped}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onError,
-                                  ),
-                                ),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                                labelPadding: const EdgeInsets.all(0),
-                                label: Text(
-                                  "Completed: ${details.statistics!.complete}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                  ),
-                                ),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).colorScheme.secondary,
-                                labelPadding: const EdgeInsets.all(0),
-                                label: Text(
-                                  "Plan to Watch: ${details.statistics!.planToWatch}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSecondary,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Divider(thickness: 2),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Openings",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 12),
-                    details.openingThemes != null && (details.openingThemes ?? []).isNotEmpty
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...details.openingThemes!.map((e) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Text(
-                                      e,
-                                      style: TextStyle(
-                                        color: Theme.of(context).colorScheme.primary,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ))
-                            ],
-                          )
-                        : const Text("No openings available"),
-                    const SizedBox(height: 12),
-                    const Text(
-                      "Endings",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 12),
-                    details.endingThemes != null && (details.endingThemes ?? []).isNotEmpty
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...details.endingThemes!.map((e) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Text(
-                                      e,
-                                      style: TextStyle(
-                                        color: Theme.of(context).colorScheme.primary,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ))
-                            ],
-                          )
-                        : const Text("No endings available"),
                     const SizedBox(height: 8),
                     const Divider(thickness: 2),
                     const SizedBox(height: 16),

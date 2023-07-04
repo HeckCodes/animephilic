@@ -2,6 +2,7 @@ import 'package:animephilic/components/components_export.dart';
 import 'package:animephilic/database/database_export.dart';
 import 'package:animephilic/helpers/helpers_exports.dart';
 import 'package:animephilic/screens/anime_ranking_screen.dart';
+import 'package:animephilic/screens/manga_ranking_screen.dart';
 import 'package:animephilic/screens/seasonal_anime_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context);
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -40,6 +41,12 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               pinned: true,
               floating: true,
               forceElevated: innerBoxIsScrolled,
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.search_rounded),
+                ),
+              ],
               bottom: TabBar(
                 isScrollable: true,
                 indicatorColor: Colors.transparent,
@@ -47,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 unselectedLabelColor: Theme.of(context).colorScheme.onBackground,
                 tabs: const [
                   Tab(text: "Seasonal Anime"),
-                  Tab(text: "Search"),
                   Tab(text: "Anime Ranking"),
                   Tab(text: "Manga Ranking"),
                 ],
@@ -59,11 +65,18 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         builder: (context) => const SeasonalAnimeScreen(),
                       ),
                     );
-                  } else if (value == 2) {
+                  } else if (value == 1) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const AnimeRankingScreen(),
+                      ),
+                    );
+                  } else if (value == 2) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MangaRankingScreen(),
                       ),
                     );
                   }

@@ -22,6 +22,7 @@ void main() async {
         BlocProvider(create: (context) => UserMangaListBloc.instance),
         BlocProvider(create: (context) => SeasonalAnimeBloc.instance),
         BlocProvider(create: (context) => AnimeRankingBloc.instance),
+        BlocProvider(create: (context) => MangaRankingBloc.instance),
       ],
       child: MaterialApp(
         title: 'Animephilic',

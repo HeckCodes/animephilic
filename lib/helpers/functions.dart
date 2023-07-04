@@ -292,3 +292,13 @@ Future<AnimeDetails> getAnimeDetails(int id) async {
 
   return AnimeDetails.fromMap(jsonDecode(response.body));
 }
+
+Future<MangaDetails> getMangaDetails(int id) async {
+  http.Response response = await http.get(
+    Uri.parse(
+        'https://api.myanimelist.net/v2/manga/$id?fields=${AnimeFieldOptions().animeFull},num_volumes,num_chapters,authors{first_name,last_name},serialization{name}'),
+    headers: {'Authorization': "Bearer ${Authentication().accessToken}"},
+  );
+
+  return MangaDetails.fromMap(jsonDecode(response.body));
+}

@@ -1,4 +1,5 @@
 import 'package:animephilic/screens/anime_details_screen.dart';
+import 'package:animephilic/screens/manga_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class VerticalListCard extends StatelessWidget {
@@ -37,6 +38,13 @@ class VerticalListCard extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AnimeDetailsScreen(animeId: animeId),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MangaDetailsScreen(mangaId: mangaId),
                   ),
                 );
               }

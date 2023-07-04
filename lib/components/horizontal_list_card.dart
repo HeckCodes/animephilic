@@ -74,7 +74,7 @@ class HorizontalListCard extends StatelessWidget {
                 child: Text(
                   title,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.clip,
                 ),
               ),
               const Divider(thickness: 2, endIndent: 16, indent: 16),

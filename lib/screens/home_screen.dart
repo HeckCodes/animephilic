@@ -3,6 +3,7 @@ import 'package:animephilic/database/database_export.dart';
 import 'package:animephilic/helpers/helpers_exports.dart';
 import 'package:animephilic/screens/anime_ranking_screen.dart';
 import 'package:animephilic/screens/manga_ranking_screen.dart';
+import 'package:animephilic/screens/search_screen.dart';
 import 'package:animephilic/screens/seasonal_anime_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,14 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               forceElevated: innerBoxIsScrolled,
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SearchScreen(),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.search_rounded),
                 ),
               ],
@@ -137,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             ),
                           );
                         } else {
-                          return const Center(child: Text('Some went extremely wrong!'));
+                          return const Center(child: Text('Something went extremely wrong!'));
                         }
                       },
                     ),
@@ -174,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             ),
                           );
                         } else {
-                          return const Center(child: Text('Some went extremely wrong!'));
+                          return const Center(child: Text('Something went extremely wrong!'));
                         }
                       },
                     ),

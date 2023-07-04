@@ -302,3 +302,15 @@ Future<MangaDetails> getMangaDetails(int id) async {
 
   return MangaDetails.fromMap(jsonDecode(response.body));
 }
+
+Future getSearch(String searchFor, String search, bool shouldGet) async {
+  if (shouldGet) {
+    http.Response response = await http.get(
+      Uri.parse('https://api.myanimelist.net/v2/$searchFor?q=$search&limit=100'),
+      headers: {'Authorization': "Bearer ${Authentication().accessToken}"},
+    );
+    return jsonDecode(response.body);
+  } else {
+    return {};
+  }
+}

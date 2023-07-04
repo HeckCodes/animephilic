@@ -511,7 +511,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
               ),
             );
           } else {
-            return const Center(child: Text('Some went extremely wrong!'));
+            return const Center(child: Text('Something went extremely wrong!'));
           }
         },
       ),

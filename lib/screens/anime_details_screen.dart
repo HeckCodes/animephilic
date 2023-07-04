@@ -715,7 +715,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
               ),
             );
           } else {
-            return const Center(child: Text('Some went extremely wrong!'));
+            return const Center(child: Text('Something went extremely wrong!'));
           }
         },
       ),

@@ -60,11 +60,41 @@ class _AccountScreenState extends State<AccountScreen> with AutomaticKeepAliveCl
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.only(left: 16),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            state.user!.picture,
+                            errorBuilder: (context, error, stackTrace) => Image.asset(
+                              'assets/images/avatar.png',
+                              width: 160,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                            width: 160,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            Center(
+                              child: Text(
+                                state.user!.name,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                style: const TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                             Chip(
                               avatar: const Icon(FontAwesomeIcons.clock),
                               label: Text(
@@ -82,51 +112,16 @@ class _AccountScreenState extends State<AccountScreen> with AutomaticKeepAliveCl
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16),
-                        child: Column(
-                          children: [
-                            Center(
-                              child: CircleAvatar(
-                                radius: 80,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(80),
-                                  child: Image.network(
-                                    state.user!.picture,
-                                    errorBuilder: (context, error, stackTrace) => Image.asset(
-                                      'assets/images/avatar.png',
-                                      width: 160,
-                                      height: 160,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    width: 160,
-                                    height: 160,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  state.user!.name,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
-                  const Divider(),
+                  const SizedBox(height: 16),
+                  const Divider(thickness: 2, indent: 32, endIndent: 32),
+                  const SizedBox(height: 16),
                   const Padding(
                     padding: EdgeInsets.only(left: 16, top: 8, bottom: 8),
                     child: Text(
-                      "Anime Statictics",
-                      style: TextStyle(fontSize: 22),
+                      "Statistics",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                   ),
                   Row(
@@ -337,7 +332,6 @@ class _AccountScreenState extends State<AccountScreen> with AutomaticKeepAliveCl
                       ),
                     ],
                   ),
-                  const Divider(),
                 ],
               );
             }

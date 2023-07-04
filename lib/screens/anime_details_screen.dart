@@ -1,6 +1,7 @@
 import 'package:animephilic/components/components_export.dart';
 import 'package:animephilic/database/database_export.dart';
 import 'package:animephilic/helpers/helpers_exports.dart';
+import 'package:animephilic/screens/image_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -576,21 +577,33 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: ClipRRect(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ImageScreen(imageURL: details.pictures![index].$2),
+                                    ),
+                                  );
+                                },
+                                splashColor: Theme.of(context).colorScheme.primaryContainer,
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  details.pictures![index].$2 ?? '',
-                                  width: 130,
-                                  height: 180,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/avatar.png',
-                                      width: 130,
-                                      height: 180,
-                                      fit: BoxFit.cover,
-                                    );
-                                  },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    details.pictures![index].$2 ?? '',
+                                    width: 130,
+                                    height: 180,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/images/avatar.png',
+                                        width: 130,
+                                        height: 180,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             );

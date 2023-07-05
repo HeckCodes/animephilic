@@ -39,7 +39,11 @@ Animephilic is a Flutter app that enhances your experience with MyAnimeList, the
 <hr>
 
 ## Screenshots
-
-|Home Screen|Search Screen|
-|---|---|
-|<img src="https://github.com/HeckCodes/tasks-public/blob/main/screenshots/main_screen/Screenshot_20220120-154409.png" width="500" alt="Add task light mode">|<img src="https://github.com/HeckCodes/tasks-public/blob/main/screenshots/main_screen/Screenshot_20220120-154426.png" width="500" alt="Add task dark mode">|
+|||||
+|---|---|---|---|
+|Home Screen|Search Screen|Anime List|Manga List|
+|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/home_recommendation.jpg" width="500" alt="home_recommendation">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/search.jpg" width="500" alt="search">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/anime_list.jpg" width="500" alt="anime list">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/manga_list.jpg" width="500" alt="manga list">|
+|Anime Ranking|Manga Ranking|Seasonal Anime|Sorting|
+|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/anime_ranking.jpg" width="500" alt="anime ranking">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/manga_ranking.jpg" width="500" alt="manga ranking">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/seasonal_anime.jpg" width="500" alt="seasonal anime">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/sorting.jpg" width="500" alt="sorting">|
+|Details Screen|Details Screen|Details Screen|Details Screen|
+|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/details1.jpg" width="500" alt="details">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/details2.jpg" width="500" alt="details">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/details3.jpg" width="500" alt="details">|<img src="https://github.com/HeckCodes/animephilic/blob/main/screenshots/details4.jpg" width="500" alt="details">|

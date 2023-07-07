@@ -18,7 +18,8 @@ class MangaDetailsScreen extends StatefulWidget {
 class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
   bool trimSynopsis = true;
   bool trimBackground = true;
-  late final Future<MangaDetails> mangaDetailsFuture;
+  late Future<MangaDetails> mangaDetailsFuture;
+  MangaDetails? details;
 
   @override
   void initState() {
@@ -31,6 +32,50 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Manga Details')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          mangaDataUpdateHandler(
+            context,
+            widget.mangaId,
+            details?.myMangaListStatus,
+            details?.numberChapters ?? 0,
+            details?.numberVolumes ?? 0,
+          ).then((response) {
+            if ((response?.statusCode ?? 0) == 200) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Data Updated'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Ok'),
+                    ),
+                  ],
+                ),
+              );
+              setState(() {
+                mangaDetailsFuture = getMangaDetails(widget.mangaId);
+              });
+            } else if (response != null) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Error Occurred ${response.statusCode}'),
+                  content: Text(response.body.toString()),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Ok'),
+                    ),
+                  ],
+                ),
+              );
+            }
+          });
+        },
+        child: const Icon(Icons.arrow_drop_up_rounded, size: 54),
+      ),
       body: FutureBuilder(
         future: mangaDetailsFuture,
         builder: (context, snapshot) {
@@ -39,7 +84,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           } else if (snapshot.hasData) {
-            MangaDetails details = snapshot.data!;
+            details = snapshot.data!;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -55,7 +100,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              details.largeImage ?? "",
+                              details!.largeImage ?? "",
                               width: 150,
                               height: 200,
                               fit: BoxFit.cover,
@@ -75,7 +120,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                details.title,
+                                details!.title,
                                 style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w500,
@@ -87,7 +132,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                                   children: [
                                     const Icon(Icons.tv_rounded),
                                     const SizedBox(width: 8),
-                                    Text(MangaDetails.parseMediaType(details.mediaType)),
+                                    Text(MangaDetails.parseMediaType(details!.mediaType)),
                                   ],
                                 ),
                               ),
@@ -97,7 +142,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                                   children: [
                                     const Icon(Icons.timelapse_rounded),
                                     const SizedBox(width: 8),
-                                    Text("${details.numberChapters} Chapters"),
+                                    Text("${details!.numberChapters} Chapters"),
                                   ],
                                 ),
                               ),
@@ -107,7 +152,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                                   children: [
                                     const Icon(Icons.timelapse_rounded),
                                     const SizedBox(width: 8),
-                                    Text("${details.numberVolumes} Volumes"),
+                                    Text("${details!.numberVolumes} Volumes"),
                                   ],
                                 ),
                               ),
@@ -117,7 +162,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                                   children: [
                                     const Icon(Icons.podcasts_rounded),
                                     const SizedBox(width: 8),
-                                    Text(MangaDetails.parseStatus(details.status)),
+                                    Text(MangaDetails.parseStatus(details!.status)),
                                   ],
                                 ),
                               ),
@@ -127,7 +172,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                                   children: [
                                     const Icon(Icons.star_rounded),
                                     const SizedBox(width: 8),
-                                    Text('${details.mean ?? 'N/A'}'),
+                                    Text('${details!.mean ?? 'N/A'}'),
                                   ],
                                 ),
                               ),
@@ -145,9 +190,9 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      details.background == null || details.background == ""
+                      details!.background == null || details!.background == ""
                           ? "No background available."
-                          : details.background!,
+                          : details!.background!,
                       maxLines: trimBackground ? 4 : null,
                       overflow: TextOverflow.fade,
                     ),
@@ -175,7 +220,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         children: [
-                          ...details.genres.map((data) => Padding(
+                          ...details!.genres.map((data) => Padding(
                                 padding: const EdgeInsets.only(right: 4),
                                 child: Card(
                                     child: Center(
@@ -189,7 +234,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      details.synopsis ?? "No synopsis available.",
+                      details!.synopsis ?? "No synopsis available.",
                       maxLines: trimSynopsis ? 4 : null,
                       overflow: TextOverflow.fade,
                     ),
@@ -220,7 +265,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.numbers_rounded),
-                                  Text("${details.rank ?? 'N/A'}"),
+                                  Text("${details!.rank ?? 'N/A'}"),
                                 ],
                               ),
                             ),
@@ -236,7 +281,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.person_rounded),
-                                  Text("${details.numberListUsers}"),
+                                  Text("${details!.numberListUsers}"),
                                 ],
                               ),
                             ),
@@ -252,7 +297,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.thumbs_up_down_rounded),
-                                  Text("${details.numberScoringUsers}"),
+                                  Text("${details!.numberScoringUsers}"),
                                 ],
                               ),
                             ),
@@ -268,7 +313,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.celebration_rounded),
-                                  Text("${details.popularity ?? 'N/A'}"),
+                                  Text("${details!.popularity ?? 'N/A'}"),
                                 ],
                               ),
                             ),
@@ -286,7 +331,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                       children: [
                         TableRow(children: [
                           const Text("Synonyms"),
-                          Text(details.synonyms?.join(', ') ?? 'N/A'),
+                          Text(details!.synonyms?.join(', ') ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -294,7 +339,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Japanese Title"),
-                          Text(details.jaTitle ?? 'N/A'),
+                          Text(details!.jaTitle ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -302,7 +347,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("English Title"),
-                          Text(details.enTitle ?? 'N/A'),
+                          Text(details!.enTitle ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -310,7 +355,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Authors"),
-                          Text(details.authors.map((e) => "${e.lastName} ${e.firstName} (${e.role})").join(', ')),
+                          Text(details!.authors.map((e) => "${e.lastName} ${e.firstName} (${e.role})").join(', ')),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -326,7 +371,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Created At"),
-                          Text("${details.createdAt.year}-${details.createdAt.month}-${details.createdAt.day}"),
+                          Text("${details!.createdAt.year}-${details!.createdAt.month}-${details!.createdAt.day}"),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -334,7 +379,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("State Date"),
-                          Text(details.startDate ?? 'N/A'),
+                          Text(details!.startDate ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -342,7 +387,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("End Date"),
-                          Text(details.endDate ?? 'N/A'),
+                          Text(details!.endDate ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -350,7 +395,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Rating"),
-                          Text(MangaDetails.parseNsfw(details.nsfw ?? 'N/A')),
+                          Text(MangaDetails.parseNsfw(details!.nsfw ?? 'N/A')),
                         ]),
                       ],
                     ),
@@ -363,13 +408,13 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.pictures != null && details.pictures!.isNotEmpty,
+                      visible: details!.pictures != null && details!.pictures!.isNotEmpty,
                       replacement: const Text("No images available"),
                       child: SizedBox(
                         height: 200,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.pictures!.length,
+                          itemCount: details!.pictures!.length,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
@@ -378,7 +423,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ImageScreen(imageURL: details.pictures![index].$2),
+                                      builder: (context) => ImageScreen(imageURL: details!.pictures![index].$2),
                                     ),
                                   );
                                 },
@@ -387,7 +432,7 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
-                                    details.pictures![index].$2 ?? '',
+                                    details!.pictures![index].$2 ?? '',
                                     width: 130,
                                     height: 180,
                                     fit: BoxFit.cover,
@@ -414,25 +459,25 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.relatedAnime.isNotEmpty,
+                      visible: details!.relatedAnime.isNotEmpty,
                       replacement: const Text("No related anime available"),
                       child: SizedBox(
                         height: 270,
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.relatedAnime.length,
+                          itemCount: details!.relatedAnime.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
-                              animeId: details.relatedAnime[index].id,
+                              animeId: details!.relatedAnime[index].id,
                               mangaId: 000,
                               isForAnime: true,
-                              title: details.relatedAnime[index].title,
-                              imageURL: details.relatedAnime[index].largeImage,
+                              title: details!.relatedAnime[index].title,
+                              imageURL: details!.relatedAnime[index].largeImage,
                               info: [
                                 (
                                   Icons.family_restroom_rounded,
-                                  details.relatedAnime[index].relationTypeFormatted,
+                                  details!.relatedAnime[index].relationTypeFormatted,
                                 ),
                               ],
                             );
@@ -447,25 +492,25 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.relatedManga.isNotEmpty,
+                      visible: details!.relatedManga.isNotEmpty,
                       replacement: const Text("No related manga available"),
                       child: SizedBox(
                         height: 270,
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.relatedManga.length,
+                          itemCount: details!.relatedManga.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
                               animeId: 000,
-                              mangaId: details.relatedManga[index].id,
+                              mangaId: details!.relatedManga[index].id,
                               isForAnime: false,
-                              title: details.relatedManga[index].title,
-                              imageURL: details.relatedManga[index].largeImage,
+                              title: details!.relatedManga[index].title,
+                              imageURL: details!.relatedManga[index].largeImage,
                               info: [
                                 (
                                   Icons.family_restroom_rounded,
-                                  details.relatedManga[index].relationTypeFormatted,
+                                  MangaDetails.parseRelationType(details!.relatedManga[index].relationTypeFormatted),
                                 ),
                               ],
                             );
@@ -480,25 +525,25 @@ class _MangaDetailsScreenState extends State<MangaDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.recommendations.isNotEmpty,
+                      visible: details!.recommendations.isNotEmpty,
                       replacement: const Text("No recommendations available"),
                       child: SizedBox(
                         height: 270,
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.recommendations.length,
+                          itemCount: details!.recommendations.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
-                              animeId: details.recommendations[index].id,
+                              animeId: details!.recommendations[index].id,
                               mangaId: 000,
                               isForAnime: true,
-                              title: details.recommendations[index].title,
-                              imageURL: details.recommendations[index].largeImage,
+                              title: details!.recommendations[index].title,
+                              imageURL: details!.recommendations[index].largeImage,
                               info: [
                                 (
                                   Icons.thumb_up_alt_rounded,
-                                  details.recommendations[index].numRecommendations.toString(),
+                                  details!.recommendations[index].numRecommendations.toString(),
                                 ),
                               ],
                             );

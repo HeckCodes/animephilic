@@ -14,8 +14,7 @@ part 'anime_ranking_state.dart';
 class AnimeRankingBloc extends Bloc<AnimeRankingEvent, AnimeRankingState> {
   static final AnimeRankingBloc instance = AnimeRankingBloc._private();
 
-  AnimeRankingBloc._private()
-      : super(const AnimeRankingState.idle(null, null)) {
+  AnimeRankingBloc._private() : super(const AnimeRankingState.idle(null, null)) {
     on<AnimeRankingEventFetchData>(_onFetchData);
     on<AnimeRankingEventFetchNextData>(_onFetchNextData);
   }

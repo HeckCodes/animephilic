@@ -19,7 +19,8 @@ class AnimeDetailsScreen extends StatefulWidget {
 class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
   bool trimSynopsis = true;
   bool trimBackground = true;
-  late final Future<AnimeDetails> animeDetailsFuture;
+  late Future<AnimeDetails> animeDetailsFuture;
+  AnimeDetails? details;
 
   @override
   void initState() {
@@ -31,7 +32,50 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Anime Details')),
+      appBar: AppBar(title: const Text('Anime Details!')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          animeDataUpdateHandler(
+            context,
+            widget.animeId,
+            details?.myListStatus,
+            details?.numberEpisodes ?? 0,
+          ).then((response) {
+            if ((response?.statusCode ?? 0) == 200) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Data Updated'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Ok'),
+                    ),
+                  ],
+                ),
+              );
+              setState(() {
+                animeDetailsFuture = getAnimeDetails(widget.animeId);
+              });
+            } else if (response != null) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Error Occurred ${response.statusCode}'),
+                  content: Text(response.body.toString()),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Ok'),
+                    ),
+                  ],
+                ),
+              );
+            }
+          });
+        },
+        child: const Icon(Icons.arrow_drop_up_rounded, size: 54),
+      ),
       body: FutureBuilder(
         future: animeDetailsFuture,
         builder: (context, snapshot) {
@@ -40,7 +84,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           } else if (snapshot.hasData) {
-            AnimeDetails details = snapshot.data!;
+            details = snapshot.data;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -56,7 +100,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              details.largeImage ?? "",
+                              details!.largeImage ?? "",
                               width: 150,
                               height: 200,
                               fit: BoxFit.cover,
@@ -76,7 +120,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                details.title,
+                                details!.title,
                                 style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w500,
@@ -88,7 +132,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   children: [
                                     const Icon(Icons.tv_rounded),
                                     const SizedBox(width: 8),
-                                    Text(AnimeDetails.parseMediaType(details.mediaType)),
+                                    Text(AnimeDetails.parseMediaType(details!.mediaType)),
                                   ],
                                 ),
                               ),
@@ -98,7 +142,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   children: [
                                     const Icon(Icons.timelapse_rounded),
                                     const SizedBox(width: 8),
-                                    Text("${details.numberEpisodes} Episodes"),
+                                    Text("${details!.numberEpisodes} Episodes"),
                                   ],
                                 ),
                               ),
@@ -108,7 +152,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   children: [
                                     const Icon(Icons.podcasts_rounded),
                                     const SizedBox(width: 8),
-                                    Text(AnimeDetails.parseStatus(details.status)),
+                                    Text(AnimeDetails.parseStatus(details!.status)),
                                   ],
                                 ),
                               ),
@@ -118,7 +162,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   children: [
                                     const Icon(Icons.star_rounded),
                                     const SizedBox(width: 8),
-                                    Text('${details.mean ?? 'N/A'}'),
+                                    Text('${details!.mean ?? 'N/A'}'),
                                   ],
                                 ),
                               ),
@@ -136,9 +180,9 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      details.background == null || details.background == ""
+                      details!.background == null || details!.background == ""
                           ? "No background available."
-                          : details.background!,
+                          : details!.background!,
                       maxLines: trimBackground ? 4 : null,
                       overflow: TextOverflow.fade,
                     ),
@@ -166,7 +210,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         children: [
-                          ...details.genres.map((data) => Padding(
+                          ...details!.genres.map((data) => Padding(
                                 padding: const EdgeInsets.only(right: 4),
                                 child: Card(
                                     child: Center(
@@ -180,7 +224,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      details.synopsis ?? "No synopsis available.",
+                      details!.synopsis ?? "No synopsis available.",
                       maxLines: trimSynopsis ? 4 : null,
                       overflow: TextOverflow.fade,
                     ),
@@ -211,7 +255,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.numbers_rounded),
-                                  Text("${details.rank ?? 'N/A'}"),
+                                  Text("${details!.rank ?? 'N/A'}"),
                                 ],
                               ),
                             ),
@@ -227,7 +271,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.person_rounded),
-                                  Text("${details.numberListUsers}"),
+                                  Text("${details!.numberListUsers}"),
                                 ],
                               ),
                             ),
@@ -243,7 +287,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.thumbs_up_down_rounded),
-                                  Text("${details.numberScoringUsers}"),
+                                  Text("${details!.numberScoringUsers}"),
                                 ],
                               ),
                             ),
@@ -259,7 +303,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                               child: Column(
                                 children: [
                                   const Icon(Icons.celebration_rounded),
-                                  Text("${details.popularity ?? 'N/A'}"),
+                                  Text("${details!.popularity ?? 'N/A'}"),
                                 ],
                               ),
                             ),
@@ -277,7 +321,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                       children: [
                         TableRow(children: [
                           const Text("Synonyms"),
-                          Text(details.synonyms?.join(', ') ?? 'N/A'),
+                          Text(details!.synonyms?.join(', ') ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -285,7 +329,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Japanese Title"),
-                          Text(details.jaTitle ?? 'N/A'),
+                          Text(details!.jaTitle ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -293,7 +337,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("English Title"),
-                          Text(details.enTitle ?? 'N/A'),
+                          Text(details!.enTitle ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -301,7 +345,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Studio"),
-                          Text(details.studios.map((e) => e.$2).join(', ')),
+                          Text(details!.studios.map((e) => e.$2).join(', ')),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -317,7 +361,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Created At"),
-                          Text("${details.createdAt.year}-${details.createdAt.month}-${details.createdAt.day}"),
+                          Text("${details!.createdAt.year}-${details!.createdAt.month}-${details!.createdAt.day}"),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -325,7 +369,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("State Date"),
-                          Text(details.startDate ?? 'N/A'),
+                          Text(details!.startDate ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -333,7 +377,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("End Date"),
-                          Text(details.endDate ?? 'N/A'),
+                          Text(details!.endDate ?? 'N/A'),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -341,9 +385,9 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Season"),
-                          Text(details.startSeason == null
+                          Text(details!.startSeason == null
                               ? 'N/A'
-                              : "${details.startSeason!.$2[0].toUpperCase() + details.startSeason!.$2.substring(1)} ${details.startSeason!.$1}"),
+                              : "${details!.startSeason!.$2[0].toUpperCase() + details!.startSeason!.$2.substring(1)} ${details!.startSeason!.$1}"),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -351,9 +395,9 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Broadcast"),
-                          Text(details.broadcast == null
+                          Text(details!.broadcast == null
                               ? 'N/A'
-                              : "${details.broadcast!.$1[0].toUpperCase() + details.broadcast!.$1.substring(1)} - ${details.broadcast!.$2}"),
+                              : "${details!.broadcast!.$1[0].toUpperCase() + details!.broadcast!.$1.substring(1)} - ${details!.broadcast!.$2}"),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -361,7 +405,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Duration"),
-                          Text("${(details.averageEpDurationInSec ?? 0) ~/ 60} min"),
+                          Text("${(details!.averageEpDurationInSec ?? 0) ~/ 60} min"),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -369,7 +413,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Source"),
-                          Text(AnimeDetails.parseSource(details.source ?? 'N/A')),
+                          Text(AnimeDetails.parseSource(details!.source ?? 'N/A')),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -377,7 +421,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Rating"),
-                          Text(AnimeDetails.parseRating(details.rating ?? 'N/A')),
+                          Text(AnimeDetails.parseRating(details!.rating ?? 'N/A')),
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 8),
@@ -385,7 +429,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                         ]),
                         TableRow(children: [
                           const Text("Rating"),
-                          Text(AnimeDetails.parseNsfw(details.nsfw ?? 'N/A')),
+                          Text(AnimeDetails.parseNsfw(details!.nsfw ?? 'N/A')),
                         ]),
                       ],
                     ),
@@ -398,7 +442,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.statistics != null,
+                      visible: details!.statistics != null,
                       replacement: const Text('Statistics not available'),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -413,35 +457,35 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                 sections: [
                                   PieChartSectionData(
                                     color: Theme.of(context).colorScheme.secondary,
-                                    value: details.statistics!.planToWatch.toDouble(),
+                                    value: details!.statistics!.planToWatch.toDouble(),
                                     title: '',
                                     radius: 80,
                                     titlePositionPercentageOffset: 0.55,
                                   ),
                                   PieChartSectionData(
                                     color: Theme.of(context).colorScheme.inversePrimary,
-                                    value: details.statistics!.complete.toDouble(),
+                                    value: details!.statistics!.complete.toDouble(),
                                     title: '',
                                     radius: 80,
                                     titlePositionPercentageOffset: 0.55,
                                   ),
                                   PieChartSectionData(
                                     color: Theme.of(context).colorScheme.error,
-                                    value: details.statistics!.dropped.toDouble(),
+                                    value: details!.statistics!.dropped.toDouble(),
                                     title: '',
                                     radius: 80,
                                     titlePositionPercentageOffset: 0.55,
                                   ),
                                   PieChartSectionData(
                                     color: Theme.of(context).colorScheme.tertiaryContainer,
-                                    value: details.statistics!.onHold.toDouble(),
+                                    value: details!.statistics!.onHold.toDouble(),
                                     title: '',
                                     radius: 80,
                                     titlePositionPercentageOffset: 0.55,
                                   ),
                                   PieChartSectionData(
                                     color: Theme.of(context).colorScheme.primary,
-                                    value: details.statistics!.watching.toDouble(),
+                                    value: details!.statistics!.watching.toDouble(),
                                     title: '',
                                     radius: 80,
                                     titlePositionPercentageOffset: 0.55,
@@ -457,7 +501,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                 backgroundColor: Theme.of(context).colorScheme.primary,
                                 labelPadding: const EdgeInsets.all(0),
                                 label: Text(
-                                  "Watching: ${details.statistics!.watching}",
+                                  "Watching: ${details!.statistics!.watching}",
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.onPrimary,
                                   ),
@@ -467,7 +511,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                 backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
                                 labelPadding: const EdgeInsets.all(0),
                                 label: Text(
-                                  "On Hold: ${details.statistics!.onHold}",
+                                  "On Hold: ${details!.statistics!.onHold}",
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.onTertiaryContainer,
                                   ),
@@ -477,7 +521,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                 backgroundColor: Theme.of(context).colorScheme.error,
                                 labelPadding: const EdgeInsets.all(0),
                                 label: Text(
-                                  "Dropped: ${details.statistics!.dropped}",
+                                  "Dropped: ${details!.statistics!.dropped}",
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.onError,
                                   ),
@@ -487,7 +531,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                 backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                                 labelPadding: const EdgeInsets.all(0),
                                 label: Text(
-                                  "Completed: ${details.statistics!.complete}",
+                                  "Completed: ${details!.statistics!.complete}",
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                                   ),
@@ -497,7 +541,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                 backgroundColor: Theme.of(context).colorScheme.secondary,
                                 labelPadding: const EdgeInsets.all(0),
                                 label: Text(
-                                  "Plan to Watch: ${details.statistics!.planToWatch}",
+                                  "Plan to Watch: ${details!.statistics!.planToWatch}",
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.onSecondary,
                                   ),
@@ -516,11 +560,11 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 12),
-                    details.openingThemes != null && (details.openingThemes ?? []).isNotEmpty
+                    details!.openingThemes != null && (details!.openingThemes ?? []).isNotEmpty
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ...details.openingThemes!.map((e) => Padding(
+                              ...details!.openingThemes!.map((e) => Padding(
                                     padding: const EdgeInsets.only(bottom: 8),
                                     child: Text(
                                       e,
@@ -540,11 +584,11 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 12),
-                    details.endingThemes != null && (details.endingThemes ?? []).isNotEmpty
+                    details!.endingThemes != null && (details!.endingThemes ?? []).isNotEmpty
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ...details.endingThemes!.map((e) => Padding(
+                              ...details!.endingThemes!.map((e) => Padding(
                                     padding: const EdgeInsets.only(bottom: 8),
                                     child: Text(
                                       e,
@@ -567,13 +611,13 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.pictures != null && details.pictures!.isNotEmpty,
+                      visible: details!.pictures != null && details!.pictures!.isNotEmpty,
                       replacement: const Text("No images available"),
                       child: SizedBox(
                         height: 200,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.pictures!.length,
+                          itemCount: details!.pictures!.length,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
@@ -582,7 +626,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ImageScreen(imageURL: details.pictures![index].$2),
+                                      builder: (context) => ImageScreen(imageURL: details!.pictures![index].$2),
                                     ),
                                   );
                                 },
@@ -591,7 +635,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
-                                    details.pictures![index].$2 ?? '',
+                                    details!.pictures![index].$2 ?? '',
                                     width: 130,
                                     height: 180,
                                     fit: BoxFit.cover,
@@ -618,25 +662,25 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.relatedAnime.isNotEmpty,
+                      visible: details!.relatedAnime.isNotEmpty,
                       replacement: const Text("No related anime available"),
                       child: SizedBox(
                         height: 270,
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.relatedAnime.length,
+                          itemCount: details!.relatedAnime.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
-                              animeId: details.relatedAnime[index].id,
+                              animeId: details!.relatedAnime[index].id,
                               mangaId: 000,
                               isForAnime: true,
-                              title: details.relatedAnime[index].title,
-                              imageURL: details.relatedAnime[index].largeImage,
+                              title: details!.relatedAnime[index].title,
+                              imageURL: details!.relatedAnime[index].largeImage,
                               info: [
                                 (
                                   Icons.family_restroom_rounded,
-                                  details.relatedAnime[index].relationTypeFormatted,
+                                  AnimeDetails.parseRelationType(details!.relatedAnime[index].relationType),
                                 ),
                               ],
                             );
@@ -651,25 +695,25 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.relatedManga.isNotEmpty,
+                      visible: details!.relatedManga.isNotEmpty,
                       replacement: const Text("No related manga available"),
                       child: SizedBox(
                         height: 270,
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.relatedManga.length,
+                          itemCount: details!.relatedManga.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
                               animeId: 000,
-                              mangaId: details.relatedManga[index].id,
+                              mangaId: details!.relatedManga[index].id,
                               isForAnime: false,
-                              title: details.relatedManga[index].title,
-                              imageURL: details.relatedManga[index].largeImage,
+                              title: details!.relatedManga[index].title,
+                              imageURL: details!.relatedManga[index].largeImage,
                               info: [
                                 (
                                   Icons.family_restroom_rounded,
-                                  details.relatedManga[index].relationTypeFormatted,
+                                  details!.relatedManga[index].relationTypeFormatted,
                                 ),
                               ],
                             );
@@ -684,25 +728,25 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Visibility(
-                      visible: details.recommendations.isNotEmpty,
+                      visible: details!.recommendations.isNotEmpty,
                       replacement: const Text("No recommendations available"),
                       child: SizedBox(
                         height: 270,
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: details.recommendations.length,
+                          itemCount: details!.recommendations.length,
                           itemBuilder: (context, index) {
                             return HorizontalListCard(
-                              animeId: details.recommendations[index].id,
+                              animeId: details!.recommendations[index].id,
                               mangaId: 000,
                               isForAnime: true,
-                              title: details.recommendations[index].title,
-                              imageURL: details.recommendations[index].largeImage,
+                              title: details!.recommendations[index].title,
+                              imageURL: details!.recommendations[index].largeImage,
                               info: [
                                 (
                                   Icons.thumb_up_alt_rounded,
-                                  details.recommendations[index].numRecommendations.toString(),
+                                  details!.recommendations[index].numRecommendations.toString(),
                                 ),
                               ],
                             );

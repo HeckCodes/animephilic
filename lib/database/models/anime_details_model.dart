@@ -305,9 +305,9 @@ class AnimeDetails {
       case 'prequel':
         return "Prequel";
       case 'alternative_setting':
-        return "Alternative Setting";
+        return "Alt. Setting";
       case 'alternative_version':
-        return "Alternative Version";
+        return "Alt. Version";
       case 'side_story':
         return "Side Story";
       case 'parent_story':

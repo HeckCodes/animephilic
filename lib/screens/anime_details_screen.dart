@@ -32,7 +32,7 @@ class _AnimeDetailsScreenState extends State<AnimeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Anime Details!')),
+      appBar: AppBar(title: const Text('Anime Details')),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           animeDataUpdateHandler(

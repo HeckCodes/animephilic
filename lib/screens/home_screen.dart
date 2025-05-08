@@ -49,7 +49,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     ),
                   ],
                   bottom: TabBar(
-                    tabAlignment: TabAlignment.fill,
+                    tabAlignment: TabAlignment.start,
+                    isScrollable: true,
                     indicatorColor: Colors.transparent,
                     labelColor: Theme.of(context).colorScheme.onSurface,
                     unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
